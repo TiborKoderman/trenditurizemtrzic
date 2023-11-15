@@ -1,6 +1,6 @@
 <template>
     <div class="cont">
-        {{ data }}
+        {{ apidata }}
     </div>
 </template>
 
@@ -11,11 +11,14 @@ export default {
     name: 'HomeGraf',
     data() {
         return {
-            data: null
+            apidata: null
         }
     },
     mounted() {
-        this.getApiData();
+        this.apidata = this.getApiData();
+
+        console.log(this.apidata);
+
     },
     methods: {
         getApiData() {

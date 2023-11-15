@@ -1,9 +1,11 @@
 <script setup>
-import Home from '../components/Home.vue'
+import HomeGreet from '../components/HomeGreet.vue'
+import HomeGraf from '../components/HomeGraf.vue'
 </script>
 
 <template>
   <main>
-    <Home />
+    <HomeGreet />
+    <HomeGraf/>
   </main>
 </template>

@@ -47,10 +47,14 @@ function getApiData() {
 
 <style lang="scss" scoped>
 .cont {
+    position: absolute;
     width: 50em;
     height: 35em;
     background-color: darkgray;
     border : 1px solid gray;
     border-radius: 40px;
+    top: 5vh;
+    left: 5vw;
+    z-index: 999;
 }
 </style>

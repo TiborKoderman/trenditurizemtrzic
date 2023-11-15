@@ -7,5 +7,6 @@ import GoogleMaps from '../components/GoogleMaps.vue'
 <template>
   <main>
     <GoogleMaps />
+    <HomeGraf style="z-index: 999;"/>
   </main>
 </template>

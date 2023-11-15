@@ -1,8 +1,12 @@
 <template>
     <div class="cont">
-        {{ obj }}
+        Mesec: {{obj.month}}  Leto: {{ obj.year }}<br>
+        Skupaj noči: {{ obj.nights_total }}<br>
+        davki skupaj: {{ obj.taxes_total }}<br>
+        kapaciteta: {{ obj.capacity }}<br>
+        zasedenost: {{ obj.occupancy }} %<br>
+        <svg></svg>
     </div>
-    <svg></svg>
 </template>
 
 <script>
@@ -18,6 +22,7 @@ export default {
     },
     mounted() {
         this.getApiData();
+
     },
     methods: {
         getApiData() {
@@ -32,6 +37,18 @@ export default {
                 console.log(this.obj);
             })
             .then(data => {return data;})
+        },
+        drawPercentOccupancy(percentage){
+            //use d3
+            var svg;
+            
+
+
+            return svg;
+        }
+    },
+    computed:{
+        monthName(number){
         }
     }
 }
@@ -54,11 +71,21 @@ function getApiData() {
     position: absolute;
     width: 50em;
     height: 35em;
-    background-color: darkgray;
-    border : 1px solid gray;
-    border-radius: 40px;
+    // border : 1px solid gray;
+    background-blend-mode:darken;
+    opacity: 90%;
+    color: white;
+    font-weight: bolder;
     top: 5vh;
     left: 5vw;
     z-index: 999;
+    margin:4rem;
+    padding: 2rem;
+    /* From https://css.glass */
+    background: rgba(0, 0, 0, 0.9);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.374);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
 }
 </style>

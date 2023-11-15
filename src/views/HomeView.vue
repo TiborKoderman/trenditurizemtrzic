@@ -6,6 +6,6 @@ import GoogleMaps from '../components/GoogleMaps.vue'
 
 <template>
   <main>
-    <Home />
+    <GoogleMaps />
   </main>
 </template>

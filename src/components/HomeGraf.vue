@@ -6,19 +6,28 @@
 
 <script>
 import * as d3 from "d3";
-// import { reactive, computed } from 'vue'
-import ref from 'vue'
+
 export default {
-    setup () {
-
-        const data = ref(getApiData());
-
-
-
-        return {data}
+    name: 'HomeGraf',
+    data() {
+        return {
+            data: null
+        }
+    },
+    mounted() {
+        this.getApiData();
+    },
+    methods: {
+        getApiData() {
+            //GET 
+            //'https://trzic.musiclab.si/api/turisticnetakse?page=1&size=100' 
+            //return data
+            fetch('https://trzic.musiclab.si/api/turisticnetakse?page=1&size=100')
+            .then(response => response.json())
+            .then(data => console.log(data));
+        }
     }
 }
-   
 
 function getApiData() {
     //GET 

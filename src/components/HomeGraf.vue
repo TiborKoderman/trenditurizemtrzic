@@ -1,7 +1,8 @@
 <template>
     <div class="cont">
-        {{ apidata }}
+        {{ obj }}
     </div>
+    <svg></svg>
 </template>
 
 <script>
@@ -11,14 +12,12 @@ export default {
     name: 'HomeGraf',
     data() {
         return {
-            apidata: null
+            apidata: null,
+            obj: ""
         }
     },
     mounted() {
-        this.apidata = this.getApiData();
-
-        console.log(this.apidata);
-
+        this.getApiData();
     },
     methods: {
         getApiData() {
@@ -27,7 +26,12 @@ export default {
             //return data
             fetch('https://trzic.musiclab.si/api/turisticnetakse?page=1&size=100')
             .then(response => response.json())
-            .then(data => console.log(data));
+            .then(data => {
+                console.log(data)
+                this.obj = data.results[0];
+                console.log(this.obj);
+            })
+            .then(data => {return data;})
         }
     }
 }

@@ -1,16 +1,29 @@
 <template>
   <div class="cont">
-    Mesec: {{ obj.month }} Leto: {{ obj.year }}<br />
-    Skupaj noči: {{ obj.nights_total }}<br />
-    davki skupaj: {{ obj.taxes_total }}<br />
-    kapaciteta: {{ obj.capacity }}<br />
-    zasedenost: {{ obj.occupancy }} %<br />
+    <h2>Pregled Turizma v Tržiču</h2>
+    <div class="categ" style="display:flex">
+            <div class="categ1">Leto</div>
+            <div class="categ1">Država</div>
+            <div class="categ1">Kapaciteta</div>
+            <div class="categ1">...</div>
+            <div class="categ1">...</div>
+    </div>
+    <h2></h2>
+        Mesec: {{obj.month}}  Leto: {{ obj.year }}<br>
+        Skupaj noči: {{ obj.nights_total }}<br>
+        davki skupaj: {{ obj.taxes_total }}<br>
+        kapaciteta: {{ obj.capacity }}<br>
+        zasedenost: {{ obj.occupancy }} %<br>
+    <h2></h2>
+        
     <!-- <div id="mydataviz">
       {{ drawPercentOccupancy(obj.occupancy) }}
     </div> -->
 
     <div style="background-color:aliceblue; border-radius: 5px; height: 10px; width: 200px;">
         <div :style="barLen"></div>
+        <p>zasedenost za ta mesec</p>
+        <p>...</p>
     </div>
   </div>
 </template>
@@ -131,4 +144,20 @@ function getApiData() {
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
 }
+
+h2{
+    margin: 2%;
+    font-size: 46px;
+}
+
+.categ1{
+    flex: 1 1 auto;
+    font-size: large;
+    border: 1px solid orange;
+    padding: 2px 35px 2px 20px;
+    background-color: orange;
+    border-radius: 18px;
+    margin: 10px;
+}
+
 </style>

@@ -8,7 +8,7 @@
           class="dropdownElement"
           v-for="drzava in getAllCountries"
           v-bind:key="drzava"
-          @click="[(drzava_izbrana = drzava), toggle_d = !toggle_d]"
+          @click="[(drzava_izbrana = drzava), (toggle_d = !toggle_d)]"
         >
           {{ drzava }}
         </a>
@@ -31,22 +31,28 @@
       <div class="categ1">...</div>
     </div>
     <h2></h2>
-    Mesec: {{ Months[obj.month] }} Leto: {{ obj.year }}<br />
+    <!-- Mesec: {{ Months[obj.month] }} Leto: {{ obj.year }}<br />
     Skupaj noči: {{ obj.nights_total }}<br />
     davki skupaj: {{ obj.taxes_total }}<br />
     kapaciteta: {{ obj.capacity }}<br />
-    zasedenost: {{ obj.occupancy }} %<br />
-    <h2></h2>
+    zasedenost: {{ obj.occupancy }} %<br />-->
 
-    <!-- <div id="mydataviz">
-      {{ drawPercentOccupancy(obj.occupancy) }}
-    </div> -->
+    <div v-if="drzava_izbrana != null && leto_izbrano != null">
+      <div class="statisticalData">
+        <p>Skupaj noči: <a><a>{{ totalNights(drzava_izbrana, leto_izbrano) }}</a></a></p>
+        <p>Povprečna zasedenost: <a>{{ averageOccupancy(drzava_izbrana, leto_izbrano) }}%</a> </p>
+        <p>Davki skupaj: <a>{{ taxesTotal(drzava_izbrana, leto_izbrano) }} €</a></p>
+        <p>Skupaj gostov: <a>{{ guestsTotal(drzava_izbrana, leto_izbrano) }}</a></p>
+      </div>
+      
+      <a href="https://trzic.musiclab.si/api/turisticnetakse?page=1&size=1000">Prenesi podatke</a>
+    </div>
 
-    <div style="background-color: aliceblue; border-radius: 5px; height: 10px; width: 200px">
+    <!-- <div style="background-color: aliceblue; border-radius: 5px; height: 10px; width: 200px">
       <div :style="barLen"></div>
       <p>zasedenost za ta mesec</p>
       <p>...</p>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -103,7 +109,7 @@ export default {
       this.toggle_l = !this.toggle_l
     },
 
-    getElements(drzava, leto){
+    getElements(drzava, leto) {
       var elements = []
       this.data.forEach((element) => {
         if (element.country_name == drzava && element.year == leto) {
@@ -112,6 +118,48 @@ export default {
       })
       return elements
     },
+
+    totalNights(drzava, leto) {
+      var total = 0
+      this.data.forEach((element) => {
+        if (element.country_name == drzava && element.year == leto) {
+          total += Number(element.nights_total)
+        }
+      })
+      return total.toFixed(2)
+    },
+
+    averageOccupancy(drzava, leto) {
+      var total = 0
+      var count = 0
+      this.data.forEach((element) => {
+        if (element.country_name == drzava && element.year == leto) {
+          total += Number(element.occupancy)
+          count++
+        }
+      })
+      return (total / count).toFixed(2)
+    },
+
+    taxesTotal(drzava, leto) {
+      var total = 0
+      this.data.forEach((element) => {
+        if (element.country_name == drzava && element.year == leto) {
+          total += Number(element.taxes_total)
+        }
+      })
+      return total.toFixed(2)
+    },
+
+    guestsTotal(drzava, leto) {
+      var total = 0
+      this.data.forEach((element) => {
+        if (element.country_name == drzava && element.year == leto) {
+          total += Number(element.guests_total)
+        }
+      })
+      return total.toFixed(0)
+    }
   },
   computed: {
     barLen() {
@@ -146,15 +194,6 @@ export default {
       return uniqueCountries
     }
   }
-}
-
-function getApiData() {
-  //GET
-  //'https://trzic.musiclab.si/api/turisticnetakse?page=1&size=100'
-  //return data
-  fetch('https://trzic.musiclab.si/api/turisticnetakse?page=1&size=100')
-    .then((response) => response.json())
-    .then((data) => console.log(data))
 }
 </script>
 
@@ -239,5 +278,29 @@ h2 {
   color: orange;
   border: 1px solid orange;
   cursor: pointer;
+}
+
+.statisticalData {
+  padding: 10px;
+
+  //maxiumum height of dropdown and add scroll
+  // max-height: 20vh;
+  // overflow-y: scroll;
+  font-weight: bold;
+  color: white;
+}
+.statisticalData p{
+  margin: 5px;
+  padding: 5px;
+  font-weight: bold;
+}
+.statisticalData a {
+  margin: 5px;
+  padding: 5px;
+  font-weight: bold;
+  border: 1px solid orange;
+  border-radius: 18px;
+  background-color: orange;
+  color: white;
 }
 </style>

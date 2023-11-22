@@ -219,7 +219,7 @@ export default {
   height: 35em;
   // border : 1px solid gray;
   background-blend-mode: darken;
-  opacity: 90%;
+  opacity: 100%;
   color: white;
   font-weight: bolder;
   top: 5vh;

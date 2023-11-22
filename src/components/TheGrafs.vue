@@ -1,7 +1,7 @@
 <template>
     <div class="cont">
         <div>
-            <p>Occupancy Over Months</p>
+            <p>Zasedenost skozi mesece</p>
             <svg width="300" height="150" ref="chart"></svg>
         </div>
     </div>
@@ -60,13 +60,25 @@ export default {
         .y((d) => yScale(+d.occupancy));
 
 
-    svg
+        const path = svg
         .append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`)
         .append('path')
         .data([occupancyData])
         .attr('class', 'line')
-        .attr('d', line).attr('stroke', 'red'); // Set the stroke color here
+        .attr('d', line)
+        .attr('stroke', 'orange') // Set the stroke color here
+        .attr('stroke-dasharray', function () {
+          const length = this.getTotalLength();
+          return `${length} ${length}`;
+        })
+        .attr('stroke-dashoffset', function () {
+          return this.getTotalLength();
+        })
+        .transition()
+        .duration(2000) // Adjust the duration as needed
+        .ease(d3.easeLinear)
+        .attr('stroke-dashoffset', 0);
     },
     computed: {
     },

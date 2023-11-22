@@ -26,7 +26,7 @@
         </a>
       </div>
 
-      <div class="categ1">Kapaciteta</div>
+      <div class="categ1">Kapaciteta (WIP)</div>
       <div class="categ1">...</div>
       <div class="categ1">...</div>
     </div>

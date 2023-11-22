@@ -1,5 +1,5 @@
 module.exports = {
     devServer: {
-    proxy: 'https://mainsite.com/',
+    proxy: 'https://trzic.musiclab.si/',
     }
     }

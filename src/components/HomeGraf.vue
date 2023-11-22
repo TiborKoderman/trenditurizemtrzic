@@ -1,30 +1,73 @@
 <template>
   <div class="cont">
     <h2>Pregled Turizma v Tržiču</h2>
-    <div class="categ" style="display:flex">
-            <div class="categ1">Leto</div>
-            <div class="categ1">Država</div>
-            <div class="categ1">Kapaciteta</div>
-            <div class="categ1">...</div>
-            <div class="categ1">...</div>
-    </div>
-    <h2></h2>
-        Mesec: {{obj.month}}  Leto: {{ obj.year }}<br>
-        Skupaj noči: {{ obj.nights_total }}<br>
-        davki skupaj: {{ obj.taxes_total }}<br>
-        kapaciteta: {{ obj.capacity }}<br>
-        zasedenost: {{ obj.occupancy }} %<br>
-    <h2></h2>
-        
-    <!-- <div id="mydataviz">
-      {{ drawPercentOccupancy(obj.occupancy) }}
-    </div> -->
+    <div class="categ" style="display: flex">
+      <div class="categ1" @click="toggle_d = !toggle_d">{{ drzava_izbrana ?? 'Država' }}</div>
+      <div class="dropdown" v-if="toggle_d">
+        <a
+          class="dropdownElement"
+          v-for="drzava in getAllCountries"
+          v-bind:key="drzava"
+          @click="[(drzava_izbrana = drzava), (toggle_d = !toggle_d)]"
+        >
+          {{ drzava }}
+        </a>
+      </div>
 
-    <div style="background-color:aliceblue; border-radius: 5px; height: 10px; width: 200px;">
-        <div :style="barLen"></div>
-        <p>zasedenost za ta mesec</p>
-        <p>...</p>
+      <div class="categ1" @click="toggle_leto">{{ leto_izbrano ?? 'Leto' }}</div>
+      <div class="dropdown" v-if="toggle_l">
+        <a
+          class="dropdownElement"
+          v-for="leto in getAllYears"
+          v-bind:key="leto"
+          @click="[(leto_izbrano = leto), toggle_leto()]"
+        >
+          {{ leto }}
+        </a>
+      </div>
+
+      <div class="categ1">Kapaciteta (WIP)</div>
+      <div class="categ1">...</div>
+      <div class="categ1">...</div>
     </div>
+    <h2></h2>
+    <!-- Mesec: {{ Months[obj.month] }} Leto: {{ obj.year }}<br />
+    Skupaj noči: {{ obj.nights_total }}<br />
+    davki skupaj: {{ obj.taxes_total }}<br />
+    kapaciteta: {{ obj.capacity }}<br />
+    zasedenost: {{ obj.occupancy }} %<br />-->
+
+    <div v-if="drzava_izbrana != null && leto_izbrano != null">
+      <div class="statisticalData">
+        <p>
+          Skupaj noči:
+          <a
+            ><a>{{ totalNights(drzava_izbrana, leto_izbrano) }}</a></a
+          >
+        </p>
+        <p>
+          Povprečna zasedenost: <a>{{ averageOccupancy(drzava_izbrana, leto_izbrano) }}%</a>
+        </p>
+        <p>
+          Davki skupaj: <a>{{ taxesTotal(drzava_izbrana, leto_izbrano) }} €</a>
+        </p>
+        <p>
+          Skupaj gostov: <a>{{ guestsTotal(drzava_izbrana, leto_izbrano) }}</a>
+        </p>
+      </div>
+
+      <div class="chart">
+        //graf gre sem
+      </div>
+
+    </div>
+    <a href="https://trzic.musiclab.si/api/turisticnetakse?page=1&size=1000">Prenesi podatke</a>
+    
+    <!-- <div style="background-color: aliceblue; border-radius: 5px; height: 10px; width: 200px">
+      <div :style="barLen"></div>
+      <p>zasedenost za ta mesec</p>
+      <p>...</p>
+    </div> -->
   </div>
 </template>
 
@@ -36,7 +79,26 @@ export default {
   data() {
     return {
       apidata: null,
-      obj: ''
+      Months: [
+        '',
+        'Januar',
+        'Februar',
+        'Marec',
+        'April',
+        'Maj',
+        'Junij',
+        'Julij',
+        'Avgust',
+        'September',
+        'Oktober',
+        'November',
+        'December'
+      ],
+      obj: '',
+      leto_izbrano: null,
+      toggle_l: false,
+      drzava_izbrana: null,
+      toggle_d: false
     }
   },
   mounted() {
@@ -45,80 +107,108 @@ export default {
   methods: {
     getApiData() {
       //GET
-      //'https://trzic.musiclab.si/api/turisticnetakse?page=1&size=100'
-      //return data
-      fetch('https://trzic.musiclab.si/api/turisticnetakse?page=1&size=100')
+      fetch('https://trzic.musiclab.si/api/turisticnetakse?page=1&size=1000')
         .then((response) => response.json())
         .then((data) => {
           console.log(data)
-          this.obj = data.results[0]
-          console.log(this.obj)
+          // this.obj = data.results[0]
+          this.data = data.results
+          // console.log(this.obj)
         })
         .then((data) => {
           return data
         })
     },
-    drawPercentOccupancy(percentage) {
-      //use d3 to draw a piechart
-      var svg = document
-        .createElement('svg')
-        .attr('width', 100)
-        .attr('height', 100)
-        .append('g')
-        .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
 
-      var data = { occ: 3, nocc: 97 }
-      var color = d3
-        .scaleOrdinal()
-        .domain(data)
-        .range(['#98abc5', '#8a89a6', '#7b6888', '#6b486b', '#a05d56'])
+    toggle_leto() {
+      this.toggle_l = !this.toggle_l
+    },
 
-      var pie = d3.pie().value(function (d) {
-        return d.value
+    getElements(drzava, leto) {
+      var elements = []
+      this.data.forEach((element) => {
+        if (element.country_name == drzava && element.year == leto) {
+          elements.push(element)
+        }
       })
-      var data_ready = pie(d3.entries(data))
+      return elements
+    },
 
-      svg
-    .selectAll('whatever')
-    .data(data_ready)
-    .enter()
-    .append('path')
-    .attr('d', d3.arc()
-    .innerRadius(100)         // This is the size of the donut hole
-    .outerRadius(radius)
-    )
-    .attr('fill', function(d){ return(color(d.data.key)) })
-    .attr("stroke", "black")
-    .style("stroke-width", "2px")
-    .style("opacity", 0.7)
+    totalNights(drzava, leto) {
+      var total = 0
+      this.data.forEach((element) => {
+        if (element.country_name == drzava && element.year == leto) {
+          total += Number(element.nights_total)
+        }
+      })
+      return total.toFixed(2)
+    },
 
-      return svg
+    averageOccupancy(drzava, leto) {
+      var total = 0
+      var count = 0
+      this.data.forEach((element) => {
+        if (element.country_name == drzava && element.year == leto) {
+          total += Number(element.occupancy)
+          count++
+        }
+      })
+      return (total / count).toFixed(2)
+    },
+
+    taxesTotal(drzava, leto) {
+      var total = 0
+      this.data.forEach((element) => {
+        if (element.country_name == drzava && element.year == leto) {
+          total += Number(element.taxes_total)
+        }
+      })
+      return total.toFixed(2)
+    },
+
+    guestsTotal(drzava, leto) {
+      var total = 0
+      this.data.forEach((element) => {
+        if (element.country_name == drzava && element.year == leto) {
+          total += Number(element.guests_total)
+        }
+      })
+      return total.toFixed(0)
     }
   },
   computed: {
-    monthName(number) {},
-    barLen(){
-        return{
-            "background-color": "aqua",
-            "border-radius": "5px",
-            "height": "10px",
-            "width": Math.round(this.obj.occupancy) + "px"
-        }
+    barLen() {
+      return {
+        'background-color': 'aqua',
+        'border-radius': '5px',
+        height: '10px',
+        width: Math.round(this.obj.occupancy) + 'px'
+      }
     },
-    occupancy2decimals(){
-        let frmt = (this.obj.occupancy).toFixed(2);
-        return frmt;
+    getAllYears() {
+      //unique array of years
+      var years = []
+      this.data.forEach((element) => {
+        years.push(element.year)
+      })
+      var uniqueYears = [...new Set(years)]
+      uniqueYears.sort()
+
+      console.log(uniqueYears)
+      return uniqueYears
+    },
+
+    getAllCountries() {
+      //unique array of countries
+      var countries = []
+      this.data.forEach((element) => {
+        countries.push(element.country_name)
+      })
+      var uniqueCountries = [...new Set(countries)]
+      console.log(uniqueCountries)
+      return uniqueCountries
     }
   }
-}
-
-function getApiData() {
-  //GET
-  //'https://trzic.musiclab.si/api/turisticnetakse?page=1&size=100'
-  //return data
-  fetch('https://trzic.musiclab.si/api/turisticnetakse?page=1&size=100')
-    .then((response) => response.json())
-    .then((data) => console.log(data))
 }
 </script>
 
@@ -145,19 +235,98 @@ function getApiData() {
   -webkit-backdrop-filter: blur(5px);
 }
 
-h2{
-    margin: 2%;
-    font-size: 46px;
+h2 {
+  margin: 2%;
+  font-size: 46px;
 }
 
-.categ1{
-    flex: 1 1 auto;
-    font-size: large;
-    border: 1px solid orange;
-    padding: 2px 35px 2px 20px;
-    background-color: orange;
-    border-radius: 18px;
-    margin: 10px;
+.categ1 {
+  flex: 1 1 auto;
+  font-size: large;
+  border: 1px solid orange;
+  padding: 2px 35px 2px 20px;
+  background-color: orange;
+  border-radius: 18px;
+  margin: 10px;
 }
 
+.categ1:hover {
+  background-color: white;
+  color: orange;
+  border: 1px solid orange;
+  cursor: pointer;
+}
+
+//dropdown menu
+.dropdown {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 10vh;
+  left: 10vw;
+  background-color: white;
+  border: 1px solid orange;
+  border-radius: 18px;
+  padding: 10px;
+  z-index: 999;
+
+  //maxiumum height of dropdown and add scroll
+  max-height: 20vh;
+  overflow-y: scroll;
+}
+
+.dropdownElement {
+  margin: 5px;
+  padding: 5px;
+  border: 1px solid orange;
+  border-radius: 18px;
+  background-color: orange;
+  color: white;
+
+  // //maxiumum height of dropdown and add scroll
+  // max-height: 20vh;
+  // overflow-y: scroll;
+}
+
+.dropdownElement:hover {
+  background-color: white;
+  color: orange;
+  border: 1px solid orange;
+  cursor: pointer;
+}
+
+.statisticalData {
+  padding: 10px;
+  display: inline-block;
+
+  //maxiumum height of dropdown and add scroll
+  // max-height: 20vh;
+  // overflow-y: scroll;
+  font-weight: bold;
+  color: white;
+}
+.statisticalData p {
+  margin: 5px;
+  padding: 5px;
+  font-weight: bold;
+}
+.statisticalData a {
+  margin: 5px;
+  padding: 5px;
+  font-weight: bold;
+  border: 1px solid orange;
+  border-radius: 18px;
+  background-color: orange;
+  color: white;
+}
+.chart {
+  display: inline-block;
+  //occupy all the space left
+  flex: 1 1 auto;
+
+
+  //maxiumum height of dropdown and add scroll
+  // max-height: 20vh;
+  // overflow-y: scroll;
+}
 </style>

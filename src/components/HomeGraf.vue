@@ -39,15 +39,30 @@
 
     <div v-if="drzava_izbrana != null && leto_izbrano != null">
       <div class="statisticalData">
-        <p>Skupaj noči: <a><a>{{ totalNights(drzava_izbrana, leto_izbrano) }}</a></a></p>
-        <p>Povprečna zasedenost: <a>{{ averageOccupancy(drzava_izbrana, leto_izbrano) }}%</a> </p>
-        <p>Davki skupaj: <a>{{ taxesTotal(drzava_izbrana, leto_izbrano) }} €</a></p>
-        <p>Skupaj gostov: <a>{{ guestsTotal(drzava_izbrana, leto_izbrano) }}</a></p>
+        <p>
+          Skupaj noči:
+          <a
+            ><a>{{ totalNights(drzava_izbrana, leto_izbrano) }}</a></a
+          >
+        </p>
+        <p>
+          Povprečna zasedenost: <a>{{ averageOccupancy(drzava_izbrana, leto_izbrano) }}%</a>
+        </p>
+        <p>
+          Davki skupaj: <a>{{ taxesTotal(drzava_izbrana, leto_izbrano) }} €</a>
+        </p>
+        <p>
+          Skupaj gostov: <a>{{ guestsTotal(drzava_izbrana, leto_izbrano) }}</a>
+        </p>
       </div>
-      
-      <a href="https://trzic.musiclab.si/api/turisticnetakse?page=1&size=1000">Prenesi podatke</a>
-    </div>
 
+      <div class="chart">
+        //graf gre sem
+      </div>
+
+    </div>
+    <a href="https://trzic.musiclab.si/api/turisticnetakse?page=1&size=1000">Prenesi podatke</a>
+    
     <!-- <div style="background-color: aliceblue; border-radius: 5px; height: 10px; width: 200px">
       <div :style="barLen"></div>
       <p>zasedenost za ta mesec</p>
@@ -282,6 +297,7 @@ h2 {
 
 .statisticalData {
   padding: 10px;
+  display: inline-block;
 
   //maxiumum height of dropdown and add scroll
   // max-height: 20vh;
@@ -289,7 +305,7 @@ h2 {
   font-weight: bold;
   color: white;
 }
-.statisticalData p{
+.statisticalData p {
   margin: 5px;
   padding: 5px;
   font-weight: bold;
@@ -302,5 +318,15 @@ h2 {
   border-radius: 18px;
   background-color: orange;
   color: white;
+}
+.chart {
+  display: inline-block;
+  //occupy all the space left
+  flex: 1 1 auto;
+
+
+  //maxiumum height of dropdown and add scroll
+  // max-height: 20vh;
+  // overflow-y: scroll;
 }
 </style>

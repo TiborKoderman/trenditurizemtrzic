@@ -1,31 +1,30 @@
 <script setup>
 import { RouterView } from 'vue-router'
 // import HelloWorld from './components/HelloWorld.vue'
+
 </script>
 
 <template>
   <head>
   </head>
-  <!-- <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView /> -->
-
-  <RouterView />
-
+  <GMapMap
+      :center="{ lat: 46.3805589, lng: 14.172904 }"
+      :zoom="12" 
+      style="width: 100vw; height: 100vh"
+      :options="{
+        zoomControl: true,
+        mapTypeControl: true,
+        scaleControl: true,
+        streetViewControl: true,
+        rotateControl: true,
+        fullscreenControl: true
+      }"
+    />
+    <RouterView />
 </template>
 
 <style scoped>
+
 header {
   line-height: 1.5;
   max-height: 100vh;

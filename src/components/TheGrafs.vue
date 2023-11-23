@@ -23,7 +23,7 @@ export default {
   },
   methods: {
     getApiData() {
-  fetch('https://trzic.musiclab.si/api/turisticnetakse?page=1&size=100')
+  fetch('https://trzic.musiclab.si/api/turisticnetakse?page=1&size=1000')
     .then((response) => response.json())
     .then((data) => {
       console.log(data); // Log the entire API response
@@ -42,7 +42,7 @@ export default {
       const height = +svg.attr('height') - margin.top - margin.bottom;
 
       const occupancyData = this.apidata.results;
-
+      console.log(occupancyData[100])
       const xScale = d3
         .scaleTime()
         .range([0, width])

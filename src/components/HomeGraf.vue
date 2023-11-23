@@ -40,7 +40,7 @@
     <div v-if="drzava_izbrana != null && leto_izbrano != null">
       <div class="statisticalData">
         <p>
-          Skupaj noči:
+          Skupno število nočitev:
           <a
             ><a>{{ totalNights(drzava_izbrana, leto_izbrano) }}</a></a
           >
@@ -49,19 +49,18 @@
           Povprečna zasedenost: <a>{{ averageOccupancy(drzava_izbrana, leto_izbrano) }}%</a>
         </p>
         <p>
-          Davki skupaj: <a>{{ taxesTotal(drzava_izbrana, leto_izbrano) }} €</a>
+          Vsota davkov: <a>{{ taxesTotal(drzava_izbrana, leto_izbrano) }} €</a>
         </p>
         <p>
-          Skupaj gostov: <a>{{ guestsTotal(drzava_izbrana, leto_izbrano) }}</a>
+          Skupno število gostov: <a>{{ guestsTotal(drzava_izbrana, leto_izbrano) }}</a>
         </p>
       </div>
 
       <div class="chart">
-        //graf gre sem
       </div>
 
     </div>
-    <a href="https://trzic.musiclab.si/api/turisticnetakse?page=1&size=1000">Prenesi podatke</a>
+    <!-- <a href="https://trzic.musiclab.si/api/turisticnetakse?page=1&size=1000">Prenesi podatke</a> -->
     
     <!-- <div style="background-color: aliceblue; border-radius: 5px; height: 10px; width: 200px">
       <div :style="barLen"></div>
@@ -243,17 +242,17 @@ h2 {
 .categ1 {
   flex: 1 1 auto;
   font-size: large;
-  border: 1px solid orange;
+  border: 1px solid darkorange;
   padding: 2px 35px 2px 20px;
-  background-color: orange;
+  background-color: darkorange;
   border-radius: 18px;
   margin: 10px;
 }
 
 .categ1:hover {
   background-color: white;
-  color: orange;
-  border: 1px solid orange;
+  color: darkorange;
+  border: 1px solid darkorange;
   cursor: pointer;
 }
 
@@ -278,9 +277,9 @@ h2 {
 .dropdownElement {
   margin: 5px;
   padding: 5px;
-  border: 1px solid orange;
+  border: 1px solid darkorange;
   border-radius: 18px;
-  background-color: orange;
+  background-color: darkorange;
   color: white;
 
   // //maxiumum height of dropdown and add scroll
@@ -290,8 +289,8 @@ h2 {
 
 .dropdownElement:hover {
   background-color: white;
-  color: orange;
-  border: 1px solid orange;
+  color: darkorange;
+  border: 1px solid darkorange;
   cursor: pointer;
 }
 
@@ -314,10 +313,10 @@ h2 {
   margin: 5px;
   padding: 5px;
   font-weight: bold;
-  border: 1px solid orange;
+  border: 1px solid azure;
   border-radius: 18px;
-  background-color: orange;
-  color: white;
+  background-color: azure;
+  color: black;
 }
 .chart {
   display: inline-block;

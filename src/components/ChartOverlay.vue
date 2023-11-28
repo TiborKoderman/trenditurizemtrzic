@@ -35,7 +35,12 @@
       const width = svg.node().getBoundingClientRect().width - margin.left - margin.right;
       const height = 150;
 
-      const occupancyData = this.data;
+      let occupancyData = this.data;
+
+      if (this.drzava && this.leto) {
+        // Če sta izbrani država in leto, filtrirajte podatke
+        occupancyData = occupancyData.filter(d => d.country_name === this.drzava && d.year === this.leto);
+        }
       
       const xScale = d3
         .scaleBand()

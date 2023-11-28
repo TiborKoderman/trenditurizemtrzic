@@ -143,10 +143,13 @@ export default {
       }
     },
     filterData() {
-      // Implement your data filtering logic here based on the selected category
-      // For example, if you are filtering data for a selected country
-      const filteredData = this.apidata.results.filter(element => element.country_name === this.drzava_izbrana);
-      return filteredData;
+      if (this.drzava_izbrana && this.leto_izbrano) {
+    // Filtriraj podatke glede na izbrano državo in leto
+    return this.apidata.results.filter(element => element.country_name === this.drzava_izbrana && element.year === this.leto_izbrano);
+    } else {
+      // Če ni izbrana ne država ne leto, vrni celoten seznam podatkov
+      return this.apidata.results;
+    }
     },
 
     toggle_leto() {

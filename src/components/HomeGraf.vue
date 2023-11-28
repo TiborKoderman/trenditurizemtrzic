@@ -71,7 +71,7 @@
     </div>
 
     <!-- ChartOverlay as an overlay -->
-    <ChartOverlay v-if="showOverlay" :data="this.apidata.results" @close="hideChartOverlay" />
+    <ChartOverlay v-if="showOverlay" :data="filteredData" @close="hideChartOverlay" />
 
   </div>
 </template>
@@ -105,7 +105,8 @@ export default {
       leto_izbrano: null,
       toggle_l: false,
       drzava_izbrana: null,
-      toggle_d: false
+      toggle_d: false,
+      filteredData: null
     }
   },
   mounted() {
@@ -113,6 +114,7 @@ export default {
   },
   methods: {
     showChartOverlay() {
+      this.filteredData = this.filterData()
       this.showOverlay = true;
       this.drawChart();
     },
@@ -139,6 +141,12 @@ export default {
       if (this.apidata && this.apidata.results) {
         console.log('Drawing chart with data:', this.apidata.results);
       }
+    },
+    filterData() {
+      // Implement your data filtering logic here based on the selected category
+      // For example, if you are filtering data for a selected country
+      const filteredData = this.apidata.results.filter(element => element.country_name === this.drzava_izbrana);
+      return filteredData;
     },
 
     toggle_leto() {

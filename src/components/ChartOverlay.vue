@@ -15,10 +15,17 @@
     props: {
       data: Array, // Pass data to the overlay
     },
+    watch: {
+        data: 'drawChart', // Watch for changes in data prop and trigger drawChart method
+    },
     mounted() {
       this.drawChart();
     },
     methods: {
+       updateChart(newData) {
+            // Update the chart when data changes
+            this.drawChart(newData);
+        },
         
       drawChart() {
         // Your D3.js chart drawing logic here

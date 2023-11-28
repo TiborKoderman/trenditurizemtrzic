@@ -84,12 +84,7 @@ export default {
     },
   },
 };
-  
-  function getApiData() {
-    fetch('https://trzic.musiclab.si/api/turisticnetakse?page=1&size=100')
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-  }
+
   </script>
   
   <style lang="scss" scoped>

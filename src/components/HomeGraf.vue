@@ -192,8 +192,11 @@ export default {
         years.push(element.year)
       })
       var uniqueYears = [...new Set(years)]
-      uniqueYears.sort()
-
+      //sort descending
+      uniqueYears.sort(function (a, b) {
+        return b - a
+      })
+      
       console.log(uniqueYears)
       return uniqueYears
     },

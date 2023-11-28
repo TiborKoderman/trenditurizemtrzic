@@ -56,9 +56,6 @@
         </p>
       </div>
 
-      <div class="chart">
-      </div>
-
     </div>
     <!-- <a href="https://trzic.musiclab.si/api/turisticnetakse?page=1&size=1000">Prenesi podatke</a> -->
     
@@ -67,16 +64,27 @@
       <p>zasedenost za ta mesec</p>
       <p>...</p>
     </div> -->
+
+    <div class="chart">
+      <button @click="showChartOverlay">Prikaži Graf</button>
+      <button @click="hideChartOverlay" v-if="showOverlay">Skrij Graf</button>
+    </div>
+
+    <!-- ChartOverlay as an overlay -->
+    <ChartOverlay v-if="showOverlay" :data="this.apidata.results" @close="hideChartOverlay" />
+
   </div>
 </template>
 
 <script>
+import ChartOverlay from './ChartOverlay.vue'; 
 import * as d3 from 'd3'
 
 export default {
   name: 'HomeGraf',
   data() {
     return {
+      showOverlay: false,
       apidata: null,
       Months: [
         '',
@@ -104,19 +112,33 @@ export default {
     this.getApiData()
   },
   methods: {
+    showChartOverlay() {
+      this.showOverlay = true;
+      this.drawChart();
+    },
+
+    hideChartOverlay() {
+      this.showOverlay = false;
+      // Optionally, you can perform any cleanup or reset logic here
+    },
     getApiData() {
       //GET
       fetch('https://trzic.musiclab.si/api/turisticnetakse?page=1&size=1000')
         .then((response) => response.json())
         .then((data) => {
           console.log(data)
-          // this.obj = data.results[0]
-          this.data = data.results
-          // console.log(this.obj)
+          this.apidata = data;
         })
-        .then((data) => {
-          return data
-        })
+        .catch((error) => {
+          console.error('Error fetching API data:', error);
+        });
+    },
+    drawChart() {
+      // Implement D3.js chart drawing logic using this.apidata.results
+      // Ensure this.apidata.results is not null or undefined
+      if (this.apidata && this.apidata.results) {
+        console.log('Drawing chart with data:', this.apidata.results);
+      }
     },
 
     toggle_leto() {
@@ -125,7 +147,7 @@ export default {
 
     getElements(drzava, leto) {
       var elements = []
-      this.data.forEach((element) => {
+      this.apidata.results.forEach((element) => {
         if (element.country_name == drzava && element.year == leto) {
           elements.push(element)
         }
@@ -135,7 +157,7 @@ export default {
 
     totalNights(drzava, leto) {
       var total = 0
-      this.data.forEach((element) => {
+      this.apidata.results.forEach((element) => {
         if (element.country_name == drzava && element.year == leto) {
           total += Number(element.nights_total)
         }
@@ -146,7 +168,7 @@ export default {
     averageOccupancy(drzava, leto) {
       var total = 0
       var count = 0
-      this.data.forEach((element) => {
+      this.apidata.results.forEach((element) => {
         if (element.country_name == drzava && element.year == leto) {
           total += Number(element.occupancy)
           count++
@@ -157,7 +179,7 @@ export default {
 
     taxesTotal(drzava, leto) {
       var total = 0
-      this.data.forEach((element) => {
+      this.apidata.results.forEach((element) => {
         if (element.country_name == drzava && element.year == leto) {
           total += Number(element.taxes_total)
         }
@@ -167,13 +189,16 @@ export default {
 
     guestsTotal(drzava, leto) {
       var total = 0
-      this.data.forEach((element) => {
+      this.apidata.results.forEach((element) => {
         if (element.country_name == drzava && element.year == leto) {
           total += Number(element.guests_total)
         }
       })
       return total.toFixed(0)
     }
+  },
+  components: {
+    ChartOverlay,
   },
   computed: {
     barLen() {
@@ -187,7 +212,7 @@ export default {
     getAllYears() {
       //unique array of years
       var years = []
-      this.data.forEach((element) => {
+      this.apidata.results.forEach((element) => {
         years.push(element.year)
       })
       var uniqueYears = [...new Set(years)]
@@ -200,7 +225,7 @@ export default {
     getAllCountries() {
       //unique array of countries
       var countries = []
-      this.data.forEach((element) => {
+      this.apidata.results.forEach((element) => {
         countries.push(element.country_name)
       })
       var uniqueCountries = [...new Set(countries)]

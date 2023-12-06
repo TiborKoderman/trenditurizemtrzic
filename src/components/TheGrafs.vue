@@ -60,6 +60,9 @@ export default {
         .y((d) => yScale(+d.occupancy));
 
 
+        //make the bars orange
+
+
         const path = svg
         .append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`)

@@ -42,40 +42,31 @@
     kapaciteta: {{ obj.capacity }}<br />
     zasedenost: {{ obj.occupancy }} %<br />-->
 
-    <div v-if="drzava_izbrana != null && leto_izbrano != null">
-      <div class="statisticalData">
-        <p>
-          Skupno število nočitev:
-          <a
-            ><a>{{ totalNights(drzava_izbrana, leto_izbrano) }}</a></a
-          >
-        </p>
-        <p>
-          Povprečna zasedenost: <a>{{ averageOccupancy(drzava_izbrana, leto_izbrano) }}%</a>
-        </p>
-        <p>
-          Vsota davkov: <a>{{ taxesTotal(drzava_izbrana, leto_izbrano) }} €</a>
-        </p>
-        <p>
-          Skupno število gostov: <a>{{ guestsTotal(drzava_izbrana, leto_izbrano) }}</a>
-        </p>
+    <div class="displayContent">
+      <div style="flex=1;">
+        <table v-if="drzava_izbrana != null && leto_izbrano != null" class="statisticalData">
+          <tr>
+            <td>Skupno število nočitev:</td>
+            <td class="value">{{ totalNights(drzava_izbrana, leto_izbrano) }}</td>
+          </tr>
+          <tr>
+            <td>Povprečna zasedenost:</td>
+            <td class="value">{{ averageOccupancy(drzava_izbrana, leto_izbrano) }}%</td>
+          </tr>
+          <tr>
+            <td>Vsota davkov:</td>
+            <td class="value">{{ taxesTotal(drzava_izbrana, leto_izbrano) }} €</td>
+          </tr>
+          <tr>
+            <td>Skupno število gostov:</td>
+            <td class="value">{{ guestsTotal(drzava_izbrana, leto_izbrano) }}</td>
+          </tr>
+        </table>
       </div>
+
+      <!-- ChartOverlay as an overlay -->
+      <ChartOverlay :data="filterData" @close="hideChartOverlay" style="flex=1; " />
     </div>
-    <!-- <a href="https://trzic.musiclab.si/api/turisticnetakse?page=1&size=1000">Prenesi podatke</a> -->
-
-    <!-- <div style="background-color: aliceblue; border-radius: 5px; height: 10px; width: 200px">
-      <div :style="barLen"></div>
-      <p>zasedenost za ta mesec</p>
-      <p>...</p>
-    </div> -->
-
-    <div class="chart">
-      <button @click="showChartOverlay">Prikaži Graf</button>
-      <button @click="hideChartOverlay" v-if="showOverlay">Skrij Graf</button>
-    </div>
-
-    <!-- ChartOverlay as an overlay -->
-    <ChartOverlay v-if="showOverlay" :data="filterData" @close="hideChartOverlay" />
   </div>
 </template>
 
@@ -110,7 +101,7 @@ export default {
       leto_izbrano: null,
       toggle_l: false,
       drzava_izbrana: null,
-      toggle_d: false,
+      toggle_d: false
       // data: null
       // filteredData: null
     }
@@ -140,7 +131,6 @@ export default {
       }
     },
 
-
     toggle_leto() {
       this.toggle_l = !this.toggle_l
     },
@@ -148,10 +138,7 @@ export default {
     getElements(drzava, leto) {
       var elements = []
       this.apidata.results.forEach((element) => {
-        if (element.country_name == drzava && element.year == leto && this.selCategory === "all") {
-          elements.push(element)
-        }
-        else if(element.country_name == drzava && element.year == leto && element.category.startsWith(this.selCategory)){
+        if (element.country_name == drzava && element.year == leto && this.selCategory === 'all') {
           elements.push(element)
         }
       })
@@ -161,25 +148,31 @@ export default {
     totalNights(drzava, leto) {
       var total = 0
       this.apidata.results.forEach((element) => {
-        if (element.country_name == drzava && element.year == leto && this.selCategory === "all") {
+        if (element.country_name == drzava && element.year == leto && this.selCategory === 'all') {
           total += Number(element.nights_total)
-        }
-        else if(element.country_name == drzava && element.year == leto && element.category.startsWith(this.selCategory)){
+        } else if (
+          element.country_name == drzava &&
+          element.year == leto &&
+          element.category.startsWith(this.selCategory)
+        ) {
           total += Number(element.nights_total)
         }
       })
-      return total.toFixed(2)
+      return total.toFixed(0)
     },
 
     averageOccupancy(drzava, leto) {
       var total = 0
       var count = 0
       this.apidata.results.forEach((element) => {
-        if (element.country_name == drzava && element.year == leto && this.selCategory === "all") {
+        if (element.country_name == drzava && element.year == leto && this.selCategory === 'all') {
           total += Number(element.occupancy)
           count++
-        }
-        else if(element.country_name == drzava && element.year == leto && element.category.startsWith(this.selCategory)){
+        } else if (
+          element.country_name == drzava &&
+          element.year == leto &&
+          element.category.startsWith(this.selCategory)
+        ) {
           total += Number(element.occupancy)
           count++
         }
@@ -190,10 +183,13 @@ export default {
     taxesTotal(drzava, leto) {
       var total = 0
       this.apidata.results.forEach((element) => {
-        if (element.country_name == drzava && element.year == leto && this.selCategory === "all") {
+        if (element.country_name == drzava && element.year == leto && this.selCategory === 'all') {
           total += Number(element.taxes_total)
-        }
-        else if(element.country_name == drzava && element.year == leto && element.category.startsWith(this.selCategory)){
+        } else if (
+          element.country_name == drzava &&
+          element.year == leto &&
+          element.category.startsWith(this.selCategory)
+        ) {
           total += Number(element.taxes_total)
         }
       })
@@ -203,10 +199,13 @@ export default {
     guestsTotal(drzava, leto) {
       var total = 0
       this.apidata.results.forEach((element) => {
-        if (element.country_name == drzava && element.year == leto && this.selCategory === "all") {
+        if (element.country_name == drzava && element.year == leto && this.selCategory === 'all') {
           total += Number(element.guests_total)
-        }
-        else if(element.country_name == drzava && element.year == leto && element.category.startsWith(this.selCategory)){
+        } else if (
+          element.country_name == drzava &&
+          element.year == leto &&
+          element.category.startsWith(this.selCategory)
+        ) {
           total += Number(element.guests_total)
         }
       })
@@ -250,26 +249,41 @@ export default {
       var uniqueCountries = [...new Set(countries)]
       console.log(uniqueCountries)
       return uniqueCountries
-    },    
+    },
     filterData() {
-      if (this.drzava_izbrana && this.leto_izbrano) {
+      if (this.apidata == null) return []
+      if (this.drzava_izbrana || this.leto_izbrano) {
         // Filtriraj podatke glede na izbrano državo in leto
-        return this.apidata.results.filter(
-          (element) =>{
-            if(this.selCategory === "all"){
-              return element.country_name === this.drzava_izbrana && element.year === this.leto_izbrano
-            }
-            else{
-              console.log(this.selCategory);
-              return element.country_name === this.drzava_izbrana && element.year === this.leto_izbrano && element.category.startsWith(this.selCategory)
-            }
+        return this.apidata.results.filter((element) => {
+          if (this.selCategory === 'all') {
+            if (this.drzava_izbrana === null) return element.year === this.leto_izbrano
+            if (this.leto_izbrano === null) return element.country_name === this.drzava_izbrana
+            return (
+              element.country_name === this.drzava_izbrana && element.year === this.leto_izbrano
+            )
+          } else {
+            // console.log(this.selCategory);
+            if (this.drzava_izbrana === null)
+              return (
+                element.year === this.leto_izbrano && element.category.startsWith(this.selCategory)
+              )
+            if (this.leto_izbrano === null)
+              return (
+                element.country_name === this.drzava_izbrana &&
+                element.category.startsWith(this.selCategory)
+              )
+            return (
+              element.country_name === this.drzava_izbrana &&
+              element.year === this.leto_izbrano &&
+              element.category.startsWith(this.selCategory)
+            )
           }
-        )
+        })
       } else {
         // Če ni izbrana ne država ne leto, vrni celoten seznam podatkov
         return this.apidata.results
       }
-    },
+    }
   }
 }
 </script>
@@ -286,7 +300,7 @@ export default {
   font-weight: bolder;
   top: 5vh;
   left: 5vw;
-  z-index: 999;
+  // z-index: 999;
   margin: 4rem;
   padding: 2rem;
   /* From https://css.glass */
@@ -303,8 +317,9 @@ h2 {
 }
 
 .categ1 {
-  flex: 1 1 auto;
+  flex: 1;
   font-size: large;
+  font-weight: bold;
   border: 1px solid darkorange;
   padding: 2px 35px 2px 20px;
   background-color: darkorange;
@@ -350,7 +365,7 @@ h2 {
   // overflow-y: scroll;
 }
 
-.categ{
+.categ {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -374,15 +389,28 @@ h2 {
   font-weight: bold;
   color: white;
 }
-.statisticalData p {
+
+//align the text to the right
+.statisticalData a {
+  text-align: right;
+  margin: 5px;
+  padding: 5px;
+  font-weight: bold;
+  color: white;
+}
+
+.statisticalData td {
   margin: 5px;
   padding: 5px;
   font-weight: bold;
 }
-.statisticalData a {
+.statisticalData .value {
   margin: 5px;
   padding: 5px;
   font-weight: bold;
+  text-align: center;
+  padding: 5px;
+  margin: 5px;
   border: 1px solid azure;
   border-radius: 18px;
   background-color: azure;
@@ -398,16 +426,10 @@ h2 {
   // overflow-y: scroll;
 }
 
-.categoryContainer {
-  //display at the top of the page
-  position: absolute;
-  top: 0;
-  width: 100%;
-  // height: 100px;
-  // background-color: red;
-  z-index: 999;
-
-  //center the text
-  text-align: center;
+.displayContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  grid-gap: 10px;
 }
 </style>

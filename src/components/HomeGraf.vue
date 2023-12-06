@@ -35,7 +35,7 @@
       <div class="categ1">...</div>
       <div class="categ1">...</div> -->
     </div>
-    <h2></h2>
+    <!-- <h2>{{ selCategory }}</h2> -->
     <!-- Mesec: {{ Months[obj.month] }} Leto: {{ obj.year }}<br />
     Skupaj noči: {{ obj.nights_total }}<br />
     davki skupaj: {{ obj.taxes_total }}<br />
@@ -75,7 +75,7 @@
     </div>
 
     <!-- ChartOverlay as an overlay -->
-    <ChartOverlay v-if="showOverlay" :data="filteredData" @close="hideChartOverlay" />
+    <ChartOverlay v-if="showOverlay" :data="filterData" @close="hideChartOverlay" />
   </div>
 </template>
 
@@ -112,7 +112,7 @@ export default {
       drzava_izbrana: null,
       toggle_d: false,
       // data: null
-      filteredData: null
+      // filteredData: null
     }
   },
   props: {
@@ -122,7 +122,7 @@ export default {
 
   methods: {
     showChartOverlay() {
-      this.filteredData = this.filterData()
+      // this.filteredData = this.filterData()
       this.showOverlay = true
       this.drawChart()
     },
@@ -139,18 +139,7 @@ export default {
         console.log('Drawing chart with data:', this.apidata.results)
       }
     },
-    filterData() {
-      if (this.drzava_izbrana && this.leto_izbrano) {
-        // Filtriraj podatke glede na izbrano državo in leto
-        return this.apidata.results.filter(
-          (element) =>
-            element.country_name === this.drzava_izbrana && element.year === this.leto_izbrano
-        )
-      } else {
-        // Če ni izbrana ne država ne leto, vrni celoten seznam podatkov
-        return this.apidata.results
-      }
-    },
+
 
     toggle_leto() {
       this.toggle_l = !this.toggle_l
@@ -159,7 +148,10 @@ export default {
     getElements(drzava, leto) {
       var elements = []
       this.apidata.results.forEach((element) => {
-        if (element.country_name == drzava && element.year == leto) {
+        if (element.country_name == drzava && element.year == leto && this.selCategory === "all") {
+          elements.push(element)
+        }
+        else if(element.country_name == drzava && element.year == leto && element.category.startsWith(this.selCategory)){
           elements.push(element)
         }
       })
@@ -169,7 +161,10 @@ export default {
     totalNights(drzava, leto) {
       var total = 0
       this.apidata.results.forEach((element) => {
-        if (element.country_name == drzava && element.year == leto) {
+        if (element.country_name == drzava && element.year == leto && this.selCategory === "all") {
+          total += Number(element.nights_total)
+        }
+        else if(element.country_name == drzava && element.year == leto && element.category.startsWith(this.selCategory)){
           total += Number(element.nights_total)
         }
       })
@@ -180,7 +175,11 @@ export default {
       var total = 0
       var count = 0
       this.apidata.results.forEach((element) => {
-        if (element.country_name == drzava && element.year == leto) {
+        if (element.country_name == drzava && element.year == leto && this.selCategory === "all") {
+          total += Number(element.occupancy)
+          count++
+        }
+        else if(element.country_name == drzava && element.year == leto && element.category.startsWith(this.selCategory)){
           total += Number(element.occupancy)
           count++
         }
@@ -191,7 +190,10 @@ export default {
     taxesTotal(drzava, leto) {
       var total = 0
       this.apidata.results.forEach((element) => {
-        if (element.country_name == drzava && element.year == leto) {
+        if (element.country_name == drzava && element.year == leto && this.selCategory === "all") {
+          total += Number(element.taxes_total)
+        }
+        else if(element.country_name == drzava && element.year == leto && element.category.startsWith(this.selCategory)){
           total += Number(element.taxes_total)
         }
       })
@@ -201,7 +203,10 @@ export default {
     guestsTotal(drzava, leto) {
       var total = 0
       this.apidata.results.forEach((element) => {
-        if (element.country_name == drzava && element.year == leto) {
+        if (element.country_name == drzava && element.year == leto && this.selCategory === "all") {
+          total += Number(element.guests_total)
+        }
+        else if(element.country_name == drzava && element.year == leto && element.category.startsWith(this.selCategory)){
           total += Number(element.guests_total)
         }
       })
@@ -245,21 +250,26 @@ export default {
       var uniqueCountries = [...new Set(countries)]
       console.log(uniqueCountries)
       return uniqueCountries
-    },
-    getAllCategories() {
-      //continue when data is loaded
-      if (this.data == null) {
-        return []
+    },    
+    filterData() {
+      if (this.drzava_izbrana && this.leto_izbrano) {
+        // Filtriraj podatke glede na izbrano državo in leto
+        return this.apidata.results.filter(
+          (element) =>{
+            if(this.selCategory === "all"){
+              return element.country_name === this.drzava_izbrana && element.year === this.leto_izbrano
+            }
+            else{
+              console.log(this.selCategory);
+              return element.country_name === this.drzava_izbrana && element.year === this.leto_izbrano && element.category.startsWith(this.selCategory)
+            }
+          }
+        )
+      } else {
+        // Če ni izbrana ne država ne leto, vrni celoten seznam podatkov
+        return this.apidata.results
       }
-      var categories = []
-      this.data.forEach((element) => {
-        //remove stars at the end of the string
-        categories.push(element.category.replace(/\*+$/, ''))
-      })
-      var uniqueCategories = [...new Set(categories)]
-      console.log(uniqueCategories)
-      return uniqueCategories
-    }
+    },
   }
 }
 </script>

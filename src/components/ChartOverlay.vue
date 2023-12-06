@@ -35,6 +35,8 @@
       const width = svg.node().getBoundingClientRect().width - margin.left - margin.right;
       const height = 150;
 
+
+
       let occupancyData = this.data;
 
       if (this.drzava && this.leto) {
@@ -91,7 +93,8 @@
     top: 100%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: white;
+    color:orange;
+    background-color: rgba(56, 56, 56, 0.963);
     padding: 5px;
     border: 2px solid #333;
     border-radius: 20px;

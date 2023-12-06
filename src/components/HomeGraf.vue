@@ -1,11 +1,11 @@
 <template>
-  <div class="categoryContainer">
-    <CategorySelection :categories="getAllCategories">test</CategorySelection>
-  </div>
+  <!-- <CategorySelection :categories="getAllCategories">test</CategorySelection> -->
   <div class="cont">
     <h2>Pregled Turizma v Tržiču</h2>
     <div class="categ" style="display: flex">
-      <div class="categ1" @click="toggle_d = !toggle_d">{{ drzava_izbrana ?? 'Država' }}</div>
+      <div class="categ1" @click="toggle_d = !toggle_d">
+        {{ drzava_izbrana ?? 'Država' }}
+      </div>
       <div class="dropdown" v-if="toggle_d">
         <a
           class="dropdownElement"
@@ -17,7 +17,9 @@
         </a>
       </div>
 
-      <div class="categ1" @click="toggle_leto">{{ leto_izbrano ?? 'Leto' }}</div>
+      <div class="categ1" @click="toggle_leto">
+        {{ leto_izbrano ?? 'Leto' }}
+      </div>
       <div class="dropdown" v-if="toggle_l">
         <a
           class="dropdownElement"
@@ -29,9 +31,9 @@
         </a>
       </div>
 
-      <div class="categ1">Kapaciteta (WIP)</div>
+      <!-- <div class="categ1">Kapaciteta (WIP)</div>
       <div class="categ1">...</div>
-      <div class="categ1">...</div>
+      <div class="categ1">...</div> -->
     </div>
     <h2></h2>
     <!-- Mesec: {{ Months[obj.month] }} Leto: {{ obj.year }}<br />
@@ -58,10 +60,9 @@
           Skupno število gostov: <a>{{ guestsTotal(drzava_izbrana, leto_izbrano) }}</a>
         </p>
       </div>
-
     </div>
     <!-- <a href="https://trzic.musiclab.si/api/turisticnetakse?page=1&size=1000">Prenesi podatke</a> -->
-    
+
     <!-- <div style="background-color: aliceblue; border-radius: 5px; height: 10px; width: 200px">
       <div :style="barLen"></div>
       <p>zasedenost za ta mesec</p>
@@ -75,22 +76,21 @@
 
     <!-- ChartOverlay as an overlay -->
     <ChartOverlay v-if="showOverlay" :data="filteredData" @close="hideChartOverlay" />
-
   </div>
 </template>
 
 <script>
-import ChartOverlay from './ChartOverlay.vue'; 
-import * as d3 from 'd3'
 import CategorySelection from './CategorySelection.vue'
+import ChartOverlay from './ChartOverlay.vue'
+import * as d3 from 'd3'
 
 export default {
-  components: { CategorySelection },
   name: 'HomeGraf',
+  components: { CategorySelection, ChartOverlay },
   data() {
     return {
       showOverlay: false,
-      apidata: null,
+      // apidata: null,
       Months: [
         '',
         'Januar',
@@ -111,52 +111,45 @@ export default {
       toggle_l: false,
       drzava_izbrana: null,
       toggle_d: false,
-      data: null,
+      // data: null
       filteredData: null
     }
   },
-  async mounted() {
-    //wait for this to finish before doing anything else
-    await this.getApiData()
+  props: {
+    apidata: Object,
+    selCategory: String
   },
+
   methods: {
     showChartOverlay() {
       this.filteredData = this.filterData()
-      this.showOverlay = true;
-      this.drawChart();
+      this.showOverlay = true
+      this.drawChart()
     },
 
     hideChartOverlay() {
-      this.showOverlay = false;
+      this.showOverlay = false
       // Optionally, you can perform any cleanup or reset logic here
     },
-    getApiData() {
-      //GET
-      fetch('https://trzic.musiclab.si/api/turisticnetakse?page=1&size=1000')
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data)
-          this.apidata = data;
-        })
-        .catch((error) => {
-          console.error('Error fetching API data:', error);
-        });
-    },
+
     drawChart() {
       // Implement D3.js chart drawing logic using this.apidata.results
       // Ensure this.apidata.results is not null or undefined
       if (this.apidata && this.apidata.results) {
-        console.log('Drawing chart with data:', this.apidata.results);
+        console.log('Drawing chart with data:', this.apidata.results)
       }
     },
     filterData() {
       if (this.drzava_izbrana && this.leto_izbrano) {
-    // Filtriraj podatke glede na izbrano državo in leto
-    return this.apidata.results.filter(element => element.country_name === this.drzava_izbrana && element.year === this.leto_izbrano);
-    } else {
-      // Če ni izbrana ne država ne leto, vrni celoten seznam podatkov
-      return this.apidata.results;
-    }
+        // Filtriraj podatke glede na izbrano državo in leto
+        return this.apidata.results.filter(
+          (element) =>
+            element.country_name === this.drzava_izbrana && element.year === this.leto_izbrano
+        )
+      } else {
+        // Če ni izbrana ne država ne leto, vrni celoten seznam podatkov
+        return this.apidata.results
+      }
     },
 
     toggle_leto() {
@@ -213,12 +206,10 @@ export default {
         }
       })
       return total.toFixed(0)
-    },
-
-
+    }
   },
   components: {
-    ChartOverlay,
+    ChartOverlay
   },
   computed: {
     barLen() {
@@ -240,7 +231,7 @@ export default {
       uniqueYears.sort(function (a, b) {
         return b - a
       })
-      
+
       console.log(uniqueYears)
       return uniqueYears
     },
@@ -268,7 +259,7 @@ export default {
       var uniqueCategories = [...new Set(categories)]
       console.log(uniqueCategories)
       return uniqueCategories
-    },
+    }
   }
 }
 </script>
@@ -325,9 +316,9 @@ h2 {
   position: absolute;
   top: 10vh;
   left: 10vw;
-  background-color: white;
+  background-color: rgb(36, 36, 36);
   border: 1px solid orange;
-  border-radius: 18px;
+  border-radius: 5px;
   padding: 10px;
   z-index: 999;
 
@@ -347,6 +338,13 @@ h2 {
   // //maxiumum height of dropdown and add scroll
   // max-height: 20vh;
   // overflow-y: scroll;
+}
+
+.categ{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 .dropdownElement:hover {
@@ -384,7 +382,6 @@ h2 {
   display: inline-block;
   //occupy all the space left
   flex: 1 1 auto;
-
 
   //maxiumum height of dropdown and add scroll
   // max-height: 20vh;

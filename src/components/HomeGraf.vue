@@ -111,7 +111,7 @@ export default {
       toggle_l: false,
       drzava_izbrana: null,
       toggle_d: false,
-      data: null
+      data: null,
       filteredData: null
     }
   },

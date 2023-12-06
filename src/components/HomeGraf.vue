@@ -1,4 +1,7 @@
 <template>
+  <div class="categoryContainer">
+    <CategorySelection :categories="getAllCategories">test</CategorySelection>
+  </div>
   <div class="cont">
     <h2>Pregled Turizma v Tržiču</h2>
     <div class="categ" style="display: flex">
@@ -79,8 +82,10 @@
 <script>
 import ChartOverlay from './ChartOverlay.vue'; 
 import * as d3 from 'd3'
+import CategorySelection from './CategorySelection.vue'
 
 export default {
+  components: { CategorySelection },
   name: 'HomeGraf',
   data() {
     return {
@@ -106,11 +111,13 @@ export default {
       toggle_l: false,
       drzava_izbrana: null,
       toggle_d: false,
+      data: null
       filteredData: null
     }
   },
-  mounted() {
-    this.getApiData()
+  async mounted() {
+    //wait for this to finish before doing anything else
+    await this.getApiData()
   },
   methods: {
     showChartOverlay() {
@@ -206,7 +213,9 @@ export default {
         }
       })
       return total.toFixed(0)
-    }
+    },
+
+
   },
   components: {
     ChartOverlay,
@@ -227,8 +236,11 @@ export default {
         years.push(element.year)
       })
       var uniqueYears = [...new Set(years)]
-      uniqueYears.sort()
-
+      //sort descending
+      uniqueYears.sort(function (a, b) {
+        return b - a
+      })
+      
       console.log(uniqueYears)
       return uniqueYears
     },
@@ -242,7 +254,21 @@ export default {
       var uniqueCountries = [...new Set(countries)]
       console.log(uniqueCountries)
       return uniqueCountries
-    }
+    },
+    getAllCategories() {
+      //continue when data is loaded
+      if (this.data == null) {
+        return []
+      }
+      var categories = []
+      this.data.forEach((element) => {
+        //remove stars at the end of the string
+        categories.push(element.category.replace(/\*+$/, ''))
+      })
+      var uniqueCategories = [...new Set(categories)]
+      console.log(uniqueCategories)
+      return uniqueCategories
+    },
   }
 }
 </script>
@@ -363,5 +389,18 @@ h2 {
   //maxiumum height of dropdown and add scroll
   // max-height: 20vh;
   // overflow-y: scroll;
+}
+
+.categoryContainer {
+  //display at the top of the page
+  position: absolute;
+  top: 0;
+  width: 100%;
+  // height: 100px;
+  // background-color: red;
+  z-index: 999;
+
+  //center the text
+  text-align: center;
 }
 </style>

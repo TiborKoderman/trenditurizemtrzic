@@ -3,7 +3,7 @@
   <div class="cont">
     <h2>Pregled Turizma v Tržiču</h2>
     <div class="categ" style="display: flex">
-      <div class="categ1" @click="toggle_d = !toggle_d">
+      <div class="categ1" @click="toggle_d = !toggle_d; toggle_l=false">
         {{ drzava_izbrana ?? 'Država' }}
       </div>
       <div class="dropdown" v-if="toggle_d">
@@ -11,13 +11,13 @@
           class="dropdownElement"
           v-for="drzava in getAllCountries"
           v-bind:key="drzava"
-          @click="[(drzava_izbrana = drzava), (toggle_d = !toggle_d)]"
+          @click="[(drzava_izbrana = drzava), toggle_drzava()]"
         >
           {{ drzava }}
         </a>
       </div>
 
-      <div class="categ1" @click="toggle_leto">
+      <div class="categ1" @click="toggle_l = !toggle_l, toggle_d=false">
         {{ leto_izbrano ?? 'Leto' }}
       </div>
       <div class="dropdown" v-if="toggle_l">
@@ -106,6 +106,7 @@ export default {
       // filteredData: null
     }
   },
+
   props: {
     apidata: Object,
     selCategory: String
@@ -133,6 +134,12 @@ export default {
 
     toggle_leto() {
       this.toggle_l = !this.toggle_l
+      // this.toggle_d = false
+    },
+
+    toggle_drzava() {
+      this.toggle_d = !this.toggle_d
+      // this.toggle_l = false
     },
 
     getElements(drzava, leto) {
@@ -303,6 +310,7 @@ export default {
   // z-index: 999;
   margin: 4rem;
   padding: 2rem;
+  margin-top: 150px;
   /* From https://css.glass */
   background: rgba(0, 0, 0, 0.9);
   border-radius: 16px;
@@ -320,17 +328,21 @@ h2 {
   flex: 1;
   font-size: large;
   font-weight: bold;
-  border: 1px solid darkorange;
+  text-align: center;
+  color: white;
+  border: 1px solid #84a07c;
   padding: 2px 35px 2px 20px;
-  background-color: darkorange;
+  background-color: #84a07c;
   border-radius: 18px;
+  margin-top: 20px;
   margin: 10px;
+  position: relative;
 }
 
 .categ1:hover {
   background-color: white;
-  color: darkorange;
-  border: 1px solid darkorange;
+  color: #84a07c;
+  border: 1px solid #84a07c;
   cursor: pointer;
 }
 
@@ -339,26 +351,28 @@ h2 {
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 10vh;
-  left: 10vw;
+  top: 20vh;
+  left: 50%;
+  transform: translateX(-50%);
   background-color: rgb(36, 36, 36);
-  border: 1px solid orange;
+  // border: 1px solid #84a07c;
   border-radius: 5px;
   padding: 10px;
   z-index: 999;
+  text-align: center;
 
   //maxiumum height of dropdown and add scroll
-  max-height: 20vh;
+  max-height: 25vh;
   overflow-y: scroll;
 }
 
 .dropdownElement {
   margin: 5px;
   padding: 5px;
-  border: 1px solid darkorange;
+  border: 1px solid #ffffff;
   border-radius: 18px;
-  background-color: darkorange;
-  color: white;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
 
   // //maxiumum height of dropdown and add scroll
   // max-height: 20vh;
@@ -373,15 +387,16 @@ h2 {
 }
 
 .dropdownElement:hover {
-  background-color: white;
-  color: darkorange;
-  border: 1px solid darkorange;
+  background-color: #b7dbad;
+  color: #000000;
+  border: 1px solid #b7dbad;
   cursor: pointer;
 }
 
 .statisticalData {
   padding: 10px;
   display: inline-block;
+  margin-top: 20px;
 
   //maxiumum height of dropdown and add scroll
   // max-height: 20vh;
@@ -409,8 +424,6 @@ h2 {
   padding: 5px;
   font-weight: bold;
   text-align: center;
-  padding: 5px;
-  margin: 5px;
   border: 1px solid azure;
   border-radius: 18px;
   background-color: azure;
@@ -431,5 +444,6 @@ h2 {
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr;
   grid-gap: 10px;
+  margin-top: 30px;
 }
 </style>

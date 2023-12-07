@@ -25,7 +25,7 @@ export default {
     display: inline-block;
     padding: 0.5rem 1rem;
     border-radius: 9999px;
-    background-color: #fe7200;
+    background-color: azure;
     color: #333;
     font-size: 0.75rem;
     font-weight: 600;
@@ -34,12 +34,12 @@ export default {
     margin-right: 0.1rem;
 }
 .pill:hover {
-    background-color: #e0e0e0;
+    background-color: #e5ffdd;
     cursor: pointer;
 }
 
 .pill.selected {
-    background-color: #333;
-    color: #fff;
+    background-color: #b7dbad;
+    color: #000;
 }
 </style>

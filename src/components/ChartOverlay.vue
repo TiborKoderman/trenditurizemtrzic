@@ -61,7 +61,7 @@
 
       svg.attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom);
       // svg.attr('stroke', 'orange')
-      svg.attr('fill', 'orange')
+      svg.attr('fill', '#b7dbad')
     
 
       const g = svg
@@ -83,7 +83,7 @@
         .attr('y', d => yScale(+d.occupancy))
         .attr('width', xScale.bandwidth())
         .attr('height', d => height - yScale(+d.occupancy))
-        .attr('fill', 'orange');
+        .attr('fill', '#b7dbad');
       },
     },
   };

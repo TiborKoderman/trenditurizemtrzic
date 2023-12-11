@@ -20,7 +20,15 @@ import CategorySelection from '../components/CategorySelection.vue'
         styles: mapStyles
       }"
     >
-      <GMapMarker :key="index" v-for="(m, index) in markers" />
+      <GMapMarker
+        :key="index"
+        v-for="(m, index) in markers"
+        :position="m.position"
+        :clickable="true"
+        :draggable="false"
+        @click="center = m.position"
+      >
+      </GMapMarker>
     </GMapMap>
     <HomeGraf :apidata="apidata" :selCategory="selCategory" />
     <CategorySelection :categories="getAllCategories" @category-selected="catSelect"
@@ -255,19 +263,19 @@ export default {
       //     console.error('Error fetching API data:', error)
       //   })
 
-        //fetch pages untill you get an empty page
-        var foundEmptyPage = false
-        for(let i=1; i<5 && !foundEmptyPage ; i++){
-          fetch('https://trzic.musiclab.si/api/turisticnetakse?page='+i+'&size=1000')
+      //fetch pages untill you get an empty page
+      var foundEmptyPage = false
+      for (let i = 1; i < 5 && !foundEmptyPage; i++) {
+        fetch('https://trzic.musiclab.si/api/turisticnetakse?page=' + i + '&size=1000')
           .then((response) => response.json())
           .then((data) => {
             console.log(data)
-            if(data.results.length == 0){
-              console.log("empty page")
+            if (data.results.length == 0) {
+              console.log('empty page')
               foundEmptyPage = true
               return
             }
-            if(this.apidata == null){
+            if (this.apidata == null) {
               this.apidata = data
               return
             }
@@ -276,7 +284,7 @@ export default {
           .catch((error) => {
             console.error('Error fetching API data:', error)
           })
-        }
+      }
     },
 
     catSelect(category) {

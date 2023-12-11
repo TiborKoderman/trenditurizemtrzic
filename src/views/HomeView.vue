@@ -19,10 +19,13 @@ import CategorySelection from '../components/CategorySelection.vue'
         fullscreenControl: true,
         styles: mapStyles
       }"
-    />
+    >
+      <GMapMarker :key="index" v-for="(m, index) in markers" />
+    </GMapMap>
     <HomeGraf :apidata="apidata" :selCategory="selCategory" />
     <CategorySelection :categories="getAllCategories" @category-selected="catSelect"
-      >test</CategorySelection>
+      >test</CategorySelection
+    >
     <!-- <TheGrafs></TheGrafs> -->
   </main>
 </template>
@@ -224,6 +227,14 @@ export default {
             }
           ]
         }
+      ],
+      markers: [
+        {
+          position: {
+            lat: 46.35558928376393,
+            lng: 14.29415352009191
+          }
+        }
       ]
     }
   },
@@ -234,15 +245,38 @@ export default {
 
   methods: {
     async getApiData() {
-      fetch('https://trzic.musiclab.si/api/turisticnetakse?page=1&size=1000')
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data)
-          this.apidata = data
-        })
-        .catch((error) => {
-          console.error('Error fetching API data:', error)
-        })
+      // fetch('https://trzic.musiclab.si/api/turisticnetakse?page=1&size=1000')
+      //   .then((response) => response.json())
+      //   .then((data) => {
+      //     console.log(data)
+      //     this.apidata = data
+      //   })
+      //   .catch((error) => {
+      //     console.error('Error fetching API data:', error)
+      //   })
+
+        //fetch pages untill you get an empty page
+        var foundEmptyPage = false
+        for(let i=1; i<5 && !foundEmptyPage ; i++){
+          fetch('https://trzic.musiclab.si/api/turisticnetakse?page='+i+'&size=1000')
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data)
+            if(data.results.length == 0){
+              console.log("empty page")
+              foundEmptyPage = true
+              return
+            }
+            if(this.apidata == null){
+              this.apidata = data
+              return
+            }
+            this.apidata.results = this.apidata.results.concat(data.results)
+          })
+          .catch((error) => {
+            console.error('Error fetching API data:', error)
+          })
+        }
     },
 
     catSelect(category) {

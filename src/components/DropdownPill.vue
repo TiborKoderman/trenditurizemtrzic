@@ -26,7 +26,7 @@ export default {
     display: flex;
     flex-direction: column;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    /* border-radius: 5px; */
     padding: 1rem;
     margin-bottom: 1rem;
 }

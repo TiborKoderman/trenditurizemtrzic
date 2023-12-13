@@ -60,6 +60,9 @@ export default {
         .y((d) => yScale(+d.occupancy));
 
 
+        //make the bars orange
+
+
         const path = svg
         .append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`)
@@ -84,12 +87,7 @@ export default {
     },
   },
 };
-  
-  function getApiData() {
-    fetch('https://trzic.musiclab.si/api/turisticnetakse?page=1&size=100')
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-  }
+
   </script>
   
   <style lang="scss" scoped>

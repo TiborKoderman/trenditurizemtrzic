@@ -1,7 +1,7 @@
 <!-- ChartOverlay.vue -->
 <template>
     <div class="chart-overlay">
-      <h3>Graf Podatkov</h3>
+      <!-- <h3>Graf Podatkov</h3> -->
       <div class="chart">
       <svg width="300" height="150" ref="chart"></svg>
     </div>
@@ -35,6 +35,7 @@
       const width = svg.node().getBoundingClientRect().width - margin.left - margin.right;
       const height = 150;
 
+
       let occupancyData = this.data;
 
       if (this.drzava && this.leto) {
@@ -59,6 +60,9 @@
       svg.selectAll('*').remove(); // Clear previous chart
 
       svg.attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom);
+      // svg.attr('stroke', 'orange')
+      svg.attr('fill', '#b7dbad')
+    
 
       const g = svg
         .append('g')
@@ -79,7 +83,7 @@
         .attr('y', d => yScale(+d.occupancy))
         .attr('width', xScale.bandwidth())
         .attr('height', d => height - yScale(+d.occupancy))
-        .attr('fill', 'steelblue');
+        .attr('fill', '#b7dbad');
       },
     },
   };
@@ -87,19 +91,16 @@
   
   <style scoped>
   .chart-overlay {
-    position: fixed;
-    top: 100%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
+    /* display: inline-block; */
+    color:rgb(255, 255, 255);
     padding: 5px;
-    border: 2px solid #333;
     border-radius: 20px;
-    z-index: 1000;
+    /* align to the right */
   }
   
   .chart-overlay h3 {
     margin-bottom: 10px;
   }
+
   </style>
   

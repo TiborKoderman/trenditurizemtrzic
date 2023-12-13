@@ -5,15 +5,17 @@
       <div class="categ1" @click="toggle_d = !toggle_d; toggle_l=false">
         {{ drzava_izbrana ?? 'Država' }}
       </div>
-      <div class="dropdown" v-if="toggle_d">
+      <div id="country_dropdown" class="dropdown" v-if="toggle_d">
         <a
           class="dropdownElement"
+          id="country_element"
           @click="[(drzava_izbrana = null), toggle_drzava()]"
         >
           Vse države
         </a>
         <a
           class="dropdownElement"
+          id="country_element"
           v-for="drzava in getAllCountries"
           v-bind:key="drzava"
           @click="[(drzava_izbrana = drzava), toggle_drzava()]"
@@ -29,11 +31,13 @@
           <a
             class="dropdownElement"
             @click="[(leto_izbrano = null), toggle_leto()]"
+            id="year_element"
           >
             vsa leta
           </a>
           <a
           class="dropdownElement"
+          id="year_element"
           v-for="leto in getAllYears"
           v-bind:key="leto"
           @click="[(leto_izbrano = leto), toggle_leto()]"
@@ -307,7 +311,32 @@ export default {
 }
 </script>
 
+
 <style lang="scss" scoped>
+
+#year_dropdown {
+  top: 20vh;
+  left: 73%;
+  max-height: 25vh;
+
+}
+
+#year_element {
+  padding-left: 135px;
+  padding-right: 135px;
+}
+
+#country_dropdown {
+  top: 20vh;
+  left: 27%;
+  max-height: 25vh;
+}
+
+#country_element {
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
 .cont {
   position: absolute;
   width: 50em;
@@ -325,7 +354,7 @@ export default {
   margin-top: 150px;
   /* From https://css.glass */
   background: rgba(0, 0, 0, 0.9);
-  border-radius: 16px;
+  border-radius: 8px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.374);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
@@ -345,7 +374,7 @@ h2 {
   border: 1px solid #84a07c;
   padding: 2px 35px 2px 20px;
   background-color: #84a07c;
-  border-radius: 18px;
+  border-radius: 8px;
   margin-top: 20px;
   margin: 10px;
   position: relative;
@@ -363,32 +392,21 @@ h2 {
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 20vh;
-  left: 50%;
   transform: translateX(-50%);
   background-color: rgb(36, 36, 36);
-  // border: 1px solid #84a07c;
   border-radius: 5px;
-  padding: 10px;
   z-index: 999;
   text-align: center;
+  font-size: large;
 
   //maxiumum height of dropdown and add scroll
-  max-height: 25vh;
   overflow-y: scroll;
 }
 
 .dropdownElement {
-  margin: 5px;
-  padding: 5px;
-  border: 1px solid #ffffff;
-  border-radius: 18px;
-  background-color: #ffffff;
-  color: rgb(0, 0, 0);
+  padding: 10px;
+  color: rgb(255, 255, 255);
 
-  // //maxiumum height of dropdown and add scroll
-  // max-height: 20vh;
-  // overflow-y: scroll;
 }
 
 .categ {
@@ -399,9 +417,9 @@ h2 {
 }
 
 .dropdownElement:hover {
-  background-color: #b7dbad;
+  background-color: #ffffff;
   color: #000000;
-  border: 1px solid #b7dbad;
+  // border: 1px solid #b7dbad;
   cursor: pointer;
 }
 
@@ -437,7 +455,7 @@ h2 {
   font-weight: bold;
   text-align: center;
   border: 1px solid azure;
-  border-radius: 18px;
+  border-radius: 8px;
   background-color: azure;
   color: black;
 }

@@ -39,6 +39,9 @@ import CategorySelection from '../components/CategorySelection.vue'
 </template>
 
 <script>
+import places_json from '../json/Mesta.json'
+import mapStyles from '../json/mapStyle.json'
+
 export default {
   name: 'HomeView',
   components: {
@@ -50,223 +53,23 @@ export default {
     return {
       apidata: null,
       selCategory: 'all',
-      mapStyles: [
-        {
-          elementType: 'geometry',
-          stylers: [
-            {
-              color: '#212121'
-            }
-          ]
-        },
-        {
-          elementType: 'labels.icon',
-          stylers: [
-            {
-              visibility: 'off'
-            }
-          ]
-        },
-        {
-          elementType: 'labels.text.fill',
-          stylers: [
-            {
-              color: '#757575'
-            }
-          ]
-        },
-        {
-          elementType: 'labels.text.stroke',
-          stylers: [
-            {
-              color: '#212121'
-            }
-          ]
-        },
-        {
-          featureType: 'administrative',
-          elementType: 'geometry',
-          stylers: [
-            {
-              color: '#757575'
-            }
-          ]
-        },
-        {
-          featureType: 'administrative.country',
-          elementType: 'labels.text.fill',
-          stylers: [
-            {
-              color: '#9e9e9e'
-            }
-          ]
-        },
-        {
-          featureType: 'administrative.land_parcel',
-          stylers: [
-            {
-              visibility: 'off'
-            }
-          ]
-        },
-        {
-          featureType: 'administrative.locality',
-          elementType: 'labels.text.fill',
-          stylers: [
-            {
-              color: '#bdbdbd'
-            }
-          ]
-        },
-        {
-          featureType: 'poi',
-          elementType: 'labels.text.fill',
-          stylers: [
-            {
-              color: '#757575'
-            }
-          ]
-        },
-        {
-          featureType: 'poi.park',
-          elementType: 'geometry',
-          stylers: [
-            {
-              color: '#181818'
-            }
-          ]
-        },
-        {
-          featureType: 'poi.park',
-          elementType: 'labels.text.fill',
-          stylers: [
-            {
-              color: '#616161'
-            }
-          ]
-        },
-        {
-          featureType: 'poi.park',
-          elementType: 'labels.text.stroke',
-          stylers: [
-            {
-              color: '#1b1b1b'
-            }
-          ]
-        },
-        {
-          featureType: 'road',
-          elementType: 'geometry.fill',
-          stylers: [
-            {
-              color: '#2c2c2c'
-            }
-          ]
-        },
-        {
-          featureType: 'road',
-          elementType: 'labels.text.fill',
-          stylers: [
-            {
-              color: '#8a8a8a'
-            }
-          ]
-        },
-        {
-          featureType: 'road.arterial',
-          elementType: 'geometry',
-          stylers: [
-            {
-              color: '#373737'
-            }
-          ]
-        },
-        {
-          featureType: 'road.highway',
-          elementType: 'geometry',
-          stylers: [
-            {
-              color: '#3c3c3c'
-            }
-          ]
-        },
-        {
-          featureType: 'road.highway.controlled_access',
-          elementType: 'geometry',
-          stylers: [
-            {
-              color: '#4e4e4e'
-            }
-          ]
-        },
-        {
-          featureType: 'road.local',
-          elementType: 'labels.text.fill',
-          stylers: [
-            {
-              color: '#616161'
-            }
-          ]
-        },
-        {
-          featureType: 'transit',
-          elementType: 'labels.text.fill',
-          stylers: [
-            {
-              color: '#757575'
-            }
-          ]
-        },
-        {
-          featureType: 'water',
-          elementType: 'geometry',
-          stylers: [
-            {
-              color: '#000000'
-            }
-          ]
-        },
-        {
-          featureType: 'water',
-          elementType: 'labels.text.fill',
-          stylers: [
-            {
-              color: '#3d3d3d'
-            }
-          ]
-        }
-      ],
-      markers: [
-        {
-          position: {
-            lat: 46.35558928376393,
-            lng: 14.29415352009191
-          }
-        }
-      ]
+      places: places_json,
+      mapStyles: mapStyles
     }
   },
   async mounted() {
     //wait for this to finish before doing anything else
     await this.getApiData()
+    // this.getAllPlaces()
+
+    //get coordinates for all places
   },
 
   methods: {
     async getApiData() {
-      // fetch('https://trzic.musiclab.si/api/turisticnetakse?page=1&size=1000')
-      //   .then((response) => response.json())
-      //   .then((data) => {
-      //     console.log(data)
-      //     this.apidata = data
-      //   })
-      //   .catch((error) => {
-      //     console.error('Error fetching API data:', error)
-      //   })
-
-      //fetch pages untill you get an empty page
       var foundEmptyPage = false
-      for (let i = 1; i < 5 && !foundEmptyPage; i++) {
-        fetch('https://trzic.musiclab.si/api/turisticnetakse?page=' + i + '&size=1000')
+      for (let i = 1; !foundEmptyPage; i++) {
+        await fetch('https://trzic.musiclab.si/api/turisticnetakse?page=' + i + '&size=1000')
           .then((response) => response.json())
           .then((data) => {
             console.log(data)
@@ -290,6 +93,33 @@ export default {
     catSelect(category) {
       // console.log(category)
       return (this.selCategory = category)
+    },
+    getAllPlaces(){
+      //continue when data is loaded
+      if (this.apidata == null) {
+        return []
+      }
+      var places = []
+      this.apidata.results.forEach((element) => {
+        //remove stars at the end of the string
+        places.push(element.place)
+      })
+      var uniquePlaces = [...new Set(places)]
+      console.log(uniquePlaces)
+      return uniquePlaces
+    },
+
+    async getAllCoordinates(){
+      //writen in ./Mesta.json
+      await fetch('./Mesta.json')
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data)
+          return data
+        })
+        .catch((error) => {
+          console.error('Error fetching API data:', error)
+        })
     }
   },
   computed: {
@@ -306,7 +136,8 @@ export default {
       var uniqueCategories = [...new Set(categories)]
       console.log(uniqueCategories)
       return uniqueCategories
-    }
+    },
+
   }
 }
 </script>

@@ -7,8 +7,8 @@ import CategorySelection from '../components/CategorySelection.vue'
 <template>
   <main>
     <GMapMap
-      :center="{ lat: 46.3805589, lng: 14.172904 }"
-      :zoom="12"
+      :center="{ lat: 46.36206953456084, lng: 14.308336492747152 }"
+      :zoom="13"
       style="width: 100vw; height: 100vh"
       :options="{
         zoomControl: true,
@@ -29,6 +29,21 @@ import CategorySelection from '../components/CategorySelection.vue'
         @click="center = m.position"
       >
       </GMapMarker>
+      <GMapCircle
+        :key="place"
+        v-for="(place, v) in places"
+        :center="{ lat: place.lat, lng: place.lng }"
+        :radius="200"
+        :options="{
+          fillColor: '#84a07c',
+          fillOpacity: 0.35,
+          strokeWeight: 1
+        }"
+      >
+        <GMapInfoWindow>
+          <div>I am in info window <MyComponent /></div>
+        </GMapInfoWindow>
+      </GMapCircle>
     </GMapMap>
     <HomeGraf :apidata="apidata" :selCategory="selCategory" />
     <CategorySelection :categories="getAllCategories" @category-selected="catSelect"
@@ -39,7 +54,7 @@ import CategorySelection from '../components/CategorySelection.vue'
 </template>
 
 <script>
-import places_json from '../json/Mesta.json'
+import places_json from '../json/mesta.json'
 import mapStyles from '../json/mapStyle.json'
 
 export default {
@@ -94,7 +109,7 @@ export default {
       // console.log(category)
       return (this.selCategory = category)
     },
-    getAllPlaces(){
+    getAllPlaces() {
       //continue when data is loaded
       if (this.apidata == null) {
         return []
@@ -109,7 +124,7 @@ export default {
       return uniquePlaces
     },
 
-    async getAllCoordinates(){
+    async getAllCoordinates() {
       //writen in ./Mesta.json
       await fetch('./Mesta.json')
         .then((response) => response.json())
@@ -136,8 +151,7 @@ export default {
       var uniqueCategories = [...new Set(categories)]
       console.log(uniqueCategories)
       return uniqueCategories
-    },
-
+    }
   }
 }
 </script>

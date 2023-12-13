@@ -12,38 +12,46 @@ import CategorySelection from '../components/CategorySelection.vue'
       style="width: 100vw; height: 100vh"
       :options="{
         zoomControl: true,
-        mapTypeControl: true,
+        mapTypeControl: false,
         scaleControl: true,
-        streetViewControl: true,
-        rotateControl: true,
-        fullscreenControl: true,
+        streetViewControl: false,
+        rotateControl: false,
+        fullscreenControl: false,
         styles: mapStyles
       }"
     >
-      <GMapMarker
-        :key="index"
-        v-for="(m, index) in markers"
-        :position="m.position"
-        :clickable="true"
-        :draggable="false"
-        @click="center = m.position"
-      >
-      </GMapMarker>
-      <GMapCircle
+      <!-- <GMapCircle
         :key="place"
-        v-for="(place, v) in places"
+        v-for="place in places"
         :center="{ lat: place.lat, lng: place.lng }"
-        :radius="200"
+        :radius="300"
         :options="{
           fillColor: '#84a07c',
           fillOpacity: 0.35,
           strokeWeight: 1
         }"
       >
-        <GMapInfoWindow>
-          <div>I am in info window <MyComponent /></div>
-        </GMapInfoWindow>
-      </GMapCircle>
+    </GMapCircle> -->
+      <GMapMarker
+        :key="place"
+        v-for="place in places"
+        :position="{ lat: place.lat, lng: place.lng }"
+        :clickable="true"
+        :draggable="false"
+      >
+        <!-- draw a circle around the marker-->
+        <GMapCircle
+          :key="place"
+          :center="{ lat: place.lat, lng: place.lng }"
+          :radius="300"
+          :options="{
+            fillColor: '#84a07c',
+            fillOpacity: 0.35,
+            strokeWeight: 1
+          }"
+        >
+        </GMapCircle>
+      </GMapMarker>
     </GMapMap>
     <HomeGraf :apidata="apidata" :selCategory="selCategory" />
     <CategorySelection :categories="getAllCategories" @category-selected="catSelect"

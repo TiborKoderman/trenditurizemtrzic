@@ -6,22 +6,10 @@ import NavBar from './components/NavBar.vue'
 </script>
 
 <template>
-  <NavBar></NavBar>
+  <!-- <NavBar></NavBar> -->
   <head>
   </head>
-  <GMapMap
-      :center="{ lat: 46.3805589, lng: 14.172904 }"
-      :zoom="12" 
-      style="width: 100vw; height: 100vh"
-      :options="{
-        zoomControl: true,
-        mapTypeControl: true,
-        scaleControl: true,
-        streetViewControl: true,
-        rotateControl: true,
-        fullscreenControl: true
-      }"
-    />
+
     <RouterView />
 </template>
 

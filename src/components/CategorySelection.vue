@@ -1,22 +1,27 @@
 <template>
   <div class="categoryContainer">
     <div class="categorySelection" ref="categorySelection">
-      <div class="navArrow" @click="scrollCategories('left')">❮</div>
-      <Pill text="Vse" :isSelected="isCatSelected('all')" @click="selectCategory('all')"></Pill>
-      <Pill
-        v-for="category in visibleCategories"
-        :key="category"
-        :text="category"
-        :isSelected="isCatSelected(category)"
-        @click="selectCategory(category)"
-      ></Pill>
-      <div class="navArrow" @click="scrollCategories('right')">❯</div>
+      <horizontal-scroll>
+        <Pill text="Vse" :isSelected="isCatSelected('all')" @click="selectCategory('all')"></Pill>
+        <Pill
+          v-for="category in categories"
+          :key="category"
+          :text="category"
+          :isSelected="isCatSelected(category)"
+          @click="selectCategory(category)"
+        ></Pill>
+
+      </horizontal-scroll>
+      <!-- <div class="navArrow" @click="scrollCategories('left')">❮</div> -->
+      <!-- <div class="navArrow" @click="scrollCategories('right')">❯</div> -->
     </div>
   </div>
 </template>
 
 <script>
 import Pill from './Pill.vue'
+import HorizontalScroll from 'vue-horizontal-scroll'
+import 'vue-horizontal-scroll/dist/vue-horizontal-scroll.css'
 export default {
   name: 'CategorySelection',
   data() {
@@ -27,7 +32,7 @@ export default {
       categoriesPerPage: 5
     }
   },
-  components: { Pill },
+  components: { Pill, HorizontalScroll },
   props: {
     categories: Array
   },
@@ -71,8 +76,9 @@ export default {
 .categoryContainer {
   position: absolute;
   top: 0;
-  width: 100%;
+  width: 50vw;
   z-index: 999;
+
   text-align: center;
 }
 .categorySelection {
@@ -81,7 +87,6 @@ export default {
   white-space: nowrap;
   gap: 0.5rem;
   padding: 0.5rem;
-  background: rgba(0, 0, 0, 0.85);
   position: relative;
   justify-content: center;
 }

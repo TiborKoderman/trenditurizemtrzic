@@ -2,6 +2,7 @@
 import HomeGraf from '../components/HomeGraf.vue'
 import TheGrafs from '../components/TheGrafs.vue'
 import CategorySelection from '../components/CategorySelection.vue'
+import percentageIncreaseFromZero from '../components/percentageIncreaseFromZero.vue'
 </script>
 
 <template>
@@ -22,12 +23,12 @@ import CategorySelection from '../components/CategorySelection.vue'
     >
       <GMapMarker
         :key="place"
-        v-for="place,k in places"
+        v-for="(place, k) in places"
         :position="{ lat: place.lat, lng: place.lng }"
         :clickable="true"
         :draggable="false"
         :icon="{
-          url: '../assets/marker.png',
+          url: markerImg
         }"
       >
         <!-- draw a circle around the marker-->
@@ -42,21 +43,25 @@ import CategorySelection from '../components/CategorySelection.vue'
           }"
         >
         </GMapCircle>
-        <GMapInfoWindow class="infoWindow"
-        :opened = "true"
-        :options="{
-          pixelOffset: {
-            width: 0,
-            height: 20,
-          },
-          maxWidth: 100,
-          maxHeigth: 50
-        }"
-        v-if="getPercentageOfTotalProfitsForEachPlace[k]"
+        <GMapInfoWindow
+          class="infoWindow"
+          :opened="true"
+          :options="{
+            pixelOffset: {
+              width: 0,
+              height: 3
+            },
+            maxWidth: 100,
+            maxHeigth: 50
+          }"
+          v-if="getPercentageOfTotalProfitsForEachPlace[k]"
         >
-          <div>
-            <h1 style="color:black; font-weight: bolder;">{{getPercentageOfTotalProfitsForEachPlace[k]}}</h1>
-          </div>
+          <percentageIncreaseFromZero
+            :number="getPercentageOfTotalProfitsForEachPlace[k]"
+            style="color: black; font-weight: bolder"
+          >
+            <!-- <h1 style="color:black; font-weight: bolder;">{{getPercentageOfTotalProfitsForEachPlace[k]}}</h1> -->
+          </percentageIncreaseFromZero>
         </GMapInfoWindow>
       </GMapMarker>
     </GMapMap>
@@ -70,6 +75,7 @@ import CategorySelection from '../components/CategorySelection.vue'
 <script>
 import places_json from '../json/mesta.json'
 import mapStyles from '../json/mapStyle.json'
+import markerImg from '../assets/marker.png'
 import { color } from 'd3'
 
 export default {
@@ -77,7 +83,8 @@ export default {
   components: {
     HomeGraf,
     TheGrafs,
-    CategorySelection
+    CategorySelection,
+    percentageIncreaseFromZero
   },
   data() {
     return {
@@ -173,10 +180,10 @@ export default {
       if (this.apidata == null) {
         return []
       }
-      console.log("Profits calculation debug");
+      console.log('Profits calculation debug')
       // console.log(this.apidata.results);
       var places = {}
-      if(this.selCategory == 'all'){
+      if (this.selCategory == 'all') {
         this.apidata.results.forEach((element) => {
           // console.log(element.place);
           if (places[element.place] == undefined) {
@@ -185,12 +192,14 @@ export default {
             places[element.place] += Number(element.taxes_total)
           }
         })
-      }
-      else{
+      } else {
         this.apidata.results.forEach((element) => {
-          if (places[element.place] == undefined && element.category.replace(/\*+$/, '') == this.selCategory) {
+          if (
+            places[element.place] == undefined &&
+            element.category.replace(/\*+$/, '') == this.selCategory
+          ) {
             places[element.place] = Number(element.taxes_total)
-          } else if(element.category.replace(/\*+$/, '') == this.selCategory){
+          } else if (element.category.replace(/\*+$/, '') == this.selCategory) {
             places[element.place] += Number(element.taxes_total)
           }
         })
@@ -205,7 +214,7 @@ export default {
 
       var percentages = {}
       for (const [key, value] of Object.entries(places)) {
-        percentages[key] = ((value / total) * 100).toFixed(1) + '%'
+        percentages[key] = ((value / total) * 100).toFixed(1)
       }
       console.log(percentages)
       return percentages
@@ -223,12 +232,12 @@ main {
   min-height: 100vh;
 }
 
-.infowindow div{
+.infowindow div {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   background-color: aquamarine;
-  color:black;
+  color: black;
 }
 </style>

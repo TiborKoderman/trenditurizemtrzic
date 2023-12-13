@@ -3,7 +3,10 @@
     <div class="chart-overlay">
       <!-- <h3>Graf Podatkov</h3> -->
       <div class="chart">
-      <svg width="300" height="150" ref="chart"></svg>
+      <svg width="350" height="200" ref="chart"></svg>
+      <div class="chart-description">
+        <h3>Zasedenost po mesecih</h3>
+      </div>
     </div>
     </div>
   </template>
@@ -33,7 +36,7 @@
       const svg = d3.select(this.$refs.chart);
       const margin = { top: 20, right: 20, bottom: 30, left: 50 };
       const width = svg.node().getBoundingClientRect().width - margin.left - margin.right;
-      const height = 150;
+      const height = 180;
 
 
       let occupancyData = this.data;
@@ -54,7 +57,12 @@
         .range([height, 0])
         .domain([0, d3.max(occupancyData, d => +d.occupancy)]);
 
-      const xAxis = d3.axisBottom(xScale);
+        const xAxis = d3.axisBottom(xScale)
+        .tickFormat(d => {
+          const date = new Date(d);
+          return date.toLocaleString('default', { month: 'short' });
+        });
+
       const yAxis = d3.axisLeft(yScale);
 
       svg.selectAll('*').remove(); // Clear previous chart
@@ -75,15 +83,19 @@
       g.append('g')
         .call(yAxis);
 
-      g.selectAll('.bar')
+        g.selectAll('.bar')
         .data(occupancyData)
         .enter().append('rect')
         .attr('class', 'bar')
         .attr('x', d => xScale(`${d.year}-${d.month}`))
-        .attr('y', d => yScale(+d.occupancy))
+        .attr('y', height)
         .attr('width', xScale.bandwidth())
-        .attr('height', d => height - yScale(+d.occupancy))
-        .attr('fill', '#b7dbad');
+        .attr('height', 0)
+        .attr('fill', '#b7dbad')
+        .transition()
+        .duration(1000)
+        .attr('y', d => yScale(+d.occupancy))
+        .attr('height', d => height - yScale(+d.occupancy));
       },
     },
   };
@@ -98,9 +110,13 @@
     /* align to the right */
   }
   
-  .chart-overlay h3 {
+  .chart h3 {
     margin-bottom: 10px;
   }
+
+  .chart-description {
+  text-align: center;
+}
 
   </style>
   

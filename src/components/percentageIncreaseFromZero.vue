@@ -11,9 +11,7 @@ export default {
             nb: 0
         }
     },
-    props: {
-        number: Number
-    },
+    props: ['number'],
     mounted() {
         this.animateNumber()
     },
@@ -27,11 +25,15 @@ export default {
             let step = this.number / 60
             let counter = 0
             let interval = setInterval(() => {
+                if(this.nb+step > this.number){
+                        clearInterval(interval)
+                        return this.nb = this.number
+                    }
                 this.nb += step
                 counter++
                 if (counter >= 60) {
                     clearInterval(interval)
-                    this.nb = this.number
+                    return this.nb = this.number
                 }
             }, 10)
         }
@@ -39,7 +41,7 @@ export default {
     computed: {
         percentage() {
             if(this.nb != null)
-            return this.nb.toFixed(1)
+            return Number(this.nb).toFixed(1)
         }
     },
     watch: {

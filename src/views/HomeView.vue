@@ -3,6 +3,7 @@ import HomeGraf from '../components/HomeGraf.vue'
 import TheGrafs from '../components/TheGrafs.vue'
 import CategorySelection from '../components/CategorySelection.vue'
 import percentageIncreaseFromZero from '../components/percentageIncreaseFromZero.vue'
+import numberIncreaseFromZero from '../components/numberIncreaseFromZero.vue'
 </script>
 
 <template>
@@ -41,6 +42,7 @@ import percentageIncreaseFromZero from '../components/percentageIncreaseFromZero
             fillOpacity: 0.35,
             strokeWeight: 1
           }"
+          v-if="getPercentageOfTotalProfitsForEachPlace[k]"
         >
         </GMapCircle>
         <GMapInfoWindow
@@ -49,9 +51,9 @@ import percentageIncreaseFromZero from '../components/percentageIncreaseFromZero
           :options="{
             pixelOffset: {
               width: 0,
-              height: 3
+              height: -10
             },
-            maxWidth: 100,
+            maxWidth: 110,
             maxHeigth: 50
           }"
           v-if="getPercentageOfTotalProfitsForEachPlace[k]"
@@ -62,10 +64,29 @@ import percentageIncreaseFromZero from '../components/percentageIncreaseFromZero
           >
             <!-- <h1 style="color:black; font-weight: bolder;">{{getPercentageOfTotalProfitsForEachPlace[k]}}</h1> -->
           </percentageIncreaseFromZero>
+          <p style="font-size: smaller;">
+            <numberIncreaseFromZero :number="totals[k]" style="color: black;">
+            </numberIncreaseFromZero>
+          </p>
         </GMapInfoWindow>
       </GMapMarker>
     </GMapMap>
-    <HomeGraf :apidata="apidata" :selCategory="selCategory" />
+    <HomeGraf
+      :apidata="apidata"
+      :selCategory="selCategory"
+      @leto-izbrano="
+        (val) => {
+          leto_izbrano = val
+          console.log(leto_izbrano)
+        }
+      "
+      @drzava-izbrana="
+        (val) => {
+          drzava_izbrana = val
+          console.log(drzava_izbrana)
+        }
+      "
+    />
     <CategorySelection :categories="getAllCategories" @category-selected="catSelect"
       >test</CategorySelection
     >
@@ -76,7 +97,6 @@ import percentageIncreaseFromZero from '../components/percentageIncreaseFromZero
 import places_json from '../json/mesta.json'
 import mapStyles from '../json/mapStyle.json'
 import markerImg from '../assets/marker.png'
-import { color } from 'd3'
 
 export default {
   name: 'HomeView',
@@ -84,21 +104,25 @@ export default {
     HomeGraf,
     TheGrafs,
     CategorySelection,
-    percentageIncreaseFromZero
+    percentageIncreaseFromZero,
+    numberIncreaseFromZero
   },
   data() {
     return {
       apidata: null,
       selCategory: 'all',
       places: places_json,
-      mapStyles: mapStyles
+      mapStyles: mapStyles,
+      openMarkers: [],
+      leto_izbrano: null,
+      drzava_izbrana: null,
+      totals: {}
     }
   },
   async mounted() {
     //wait for this to finish before doing anything else
     await this.getApiData()
     // this.getAllPlaces()
-
     //get coordinates for all places
   },
 
@@ -125,6 +149,13 @@ export default {
             console.error('Error fetching API data:', error)
           })
       }
+    },
+
+    openAllMarkers() {
+      this.openMarkers = []
+      this.places.forEach((place) => {
+        this.openMarkers.push(place.name)
+      })
     },
 
     catSelect(category) {
@@ -180,11 +211,21 @@ export default {
       if (this.apidata == null) {
         return []
       }
-      console.log('Profits calculation debug')
+      // console.log('Profits calculation debug')
       // console.log(this.apidata.results);
       var places = {}
+
+      var results = this.apidata.results
+
+      if (this.leto_izbrano != null) {
+        results = results.filter((d) => d.year === this.leto_izbrano)
+      }
+      if (this.drzava_izbrana != null) {
+        results = results.filter((d) => d.country_name === this.drzava_izbrana)
+      }
+
       if (this.selCategory == 'all') {
-        this.apidata.results.forEach((element) => {
+        results.forEach((element) => {
           // console.log(element.place);
           if (places[element.place] == undefined) {
             places[element.place] = Number(element.taxes_total)
@@ -193,7 +234,7 @@ export default {
           }
         })
       } else {
-        this.apidata.results.forEach((element) => {
+        results.forEach((element) => {
           if (
             places[element.place] == undefined &&
             element.category.replace(/\*+$/, '') == this.selCategory
@@ -210,13 +251,18 @@ export default {
       for (const [key, value] of Object.entries(places)) {
         total += value
       }
-      console.log(total)
+      // console.log(total)
 
       var percentages = {}
       for (const [key, value] of Object.entries(places)) {
-        percentages[key] = ((value / total) * 100).toFixed(1)
+        percentages[key] = Number((value / total) * 100).toFixed(1)
       }
-      console.log(percentages)
+      var totals = {}
+      for (const [key, value] of Object.entries(places)) {
+        totals[key] = Number(value).toFixed(1)
+      }
+      this.totals = totals
+      // console.log(percentages)
       return percentages
     }
   }

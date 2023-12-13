@@ -3,6 +3,7 @@ import HomeGraf from '../components/HomeGraf.vue'
 import TheGrafs from '../components/TheGrafs.vue'
 import CategorySelection from '../components/CategorySelection.vue'
 import percentageIncreaseFromZero from '../components/percentageIncreaseFromZero.vue'
+import numberIncreaseFromZero from '../components/numberIncreaseFromZero.vue'
 </script>
 
 <template>
@@ -63,14 +64,28 @@ import percentageIncreaseFromZero from '../components/percentageIncreaseFromZero
           >
             <!-- <h1 style="color:black; font-weight: bolder;">{{getPercentageOfTotalProfitsForEachPlace[k]}}</h1> -->
           </percentageIncreaseFromZero>
+          <p style="font-size: smaller;">
+            <numberIncreaseFromZero :number="totals[k]" style="color: black;">
+            </numberIncreaseFromZero>
+          </p>
         </GMapInfoWindow>
       </GMapMarker>
     </GMapMap>
     <HomeGraf
       :apidata="apidata"
       :selCategory="selCategory"
-      @leto-izbrano="(val) => {leto_izbrano = val; console.log(leto_izbrano)}"
-      @drzava-izbrana="(val) => {drzava_izbrana = val; console.log(drzava_izbrana)}"
+      @leto-izbrano="
+        (val) => {
+          leto_izbrano = val
+          console.log(leto_izbrano)
+        }
+      "
+      @drzava-izbrana="
+        (val) => {
+          drzava_izbrana = val
+          console.log(drzava_izbrana)
+        }
+      "
     />
     <CategorySelection :categories="getAllCategories" @category-selected="catSelect"
       >test</CategorySelection
@@ -89,7 +104,8 @@ export default {
     HomeGraf,
     TheGrafs,
     CategorySelection,
-    percentageIncreaseFromZero
+    percentageIncreaseFromZero,
+    numberIncreaseFromZero
   },
   data() {
     return {
@@ -99,7 +115,8 @@ export default {
       mapStyles: mapStyles,
       openMarkers: [],
       leto_izbrano: null,
-      drzava_izbrana: null
+      drzava_izbrana: null,
+      totals: {}
     }
   },
   async mounted() {
@@ -200,11 +217,11 @@ export default {
 
       var results = this.apidata.results
 
-      if(this.leto_izbrano != null){
-        results = results.filter(d => d.year === this.leto_izbrano);
+      if (this.leto_izbrano != null) {
+        results = results.filter((d) => d.year === this.leto_izbrano)
       }
-      if(this.drzava_izbrana != null){
-        results = results.filter(d => d.country_name === this.drzava_izbrana);
+      if (this.drzava_izbrana != null) {
+        results = results.filter((d) => d.country_name === this.drzava_izbrana)
       }
 
       if (this.selCategory == 'all') {
@@ -240,6 +257,11 @@ export default {
       for (const [key, value] of Object.entries(places)) {
         percentages[key] = Number((value / total) * 100).toFixed(1)
       }
+      var totals = {}
+      for (const [key, value] of Object.entries(places)) {
+        totals[key] = Number(value).toFixed(1)
+      }
+      this.totals = totals
       // console.log(percentages)
       return percentages
     }

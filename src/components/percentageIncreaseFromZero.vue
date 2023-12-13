@@ -25,11 +25,15 @@ export default {
             let step = this.number / 60
             let counter = 0
             let interval = setInterval(() => {
+                if(this.nb+step > this.number){
+                        clearInterval(interval)
+                        return this.nb = this.number
+                    }
                 this.nb += step
                 counter++
                 if (counter >= 60) {
                     clearInterval(interval)
-                    this.nb = this.number
+                    return this.nb = this.number
                 }
             }, 10)
         }

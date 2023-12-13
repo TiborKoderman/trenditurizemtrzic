@@ -9,6 +9,7 @@
       <div id="country_dropdown" class="dropdown" v-if="toggle_d">
         <a
           class="dropdownElement"
+          id="country_element"
           v-for="drzava in getAllCountries"
           v-bind:key="drzava"
           @click="[(drzava_izbrana = drzava), toggle_drzava()]"
@@ -22,6 +23,7 @@
       </div>
       <div id="year_dropdown" class="dropdown" v-if="toggle_l">
         <a
+          id="year_element"
           class="dropdownElement"
           v-for="leto in getAllYears"
           v-bind:key="leto"
@@ -300,13 +302,25 @@ export default {
 
 #year_dropdown {
   top: 20vh;
-  right: 20%;
+  left: 73%;
+  max-height: 25vh;
+
+}
+
+#year_element {
+  padding-left: 135px;
+  padding-right: 135px;
 }
 
 #country_dropdown {
   top: 20vh;
   left: 27%;
   max-height: 25vh;
+}
+
+#country_element {
+  padding-left: 50px;
+  padding-right: 50px;
 }
 
 .cont {
@@ -366,27 +380,19 @@ h2 {
   position: absolute;
   transform: translateX(-50%);
   background-color: rgb(36, 36, 36);
-  // border: 1px solid #84a07c;
   border-radius: 5px;
-  // padding: 10px;
   z-index: 999;
   text-align: center;
+  font-size: large;
 
   //maxiumum height of dropdown and add scroll
   overflow-y: scroll;
 }
 
 .dropdownElement {
-  // margin: 5px;
   padding: 10px;
-  // border: 1px solid #ffffff;
-  // border-radius: 8px;
-  // background-color: #ffffff;
   color: rgb(255, 255, 255);
 
-  // //maxiumum height of dropdown and add scroll
-  // max-height: 20vh;
-  // overflow-y: scroll;
 }
 
 .categ {

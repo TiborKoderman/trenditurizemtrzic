@@ -11,9 +11,7 @@ export default {
             nb: 0
         }
     },
-    props: {
-        number: Number
-    },
+    props: ['number'],
     mounted() {
         this.animateNumber()
     },
@@ -39,7 +37,7 @@ export default {
     computed: {
         percentage() {
             if(this.nb != null)
-            return this.nb.toFixed(1)
+            return Number(this.nb).toFixed(1)
         }
     },
     watch: {

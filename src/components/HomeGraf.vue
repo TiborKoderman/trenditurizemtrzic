@@ -1,5 +1,4 @@
 <template>
-  <!-- <CategorySelection :categories="getAllCategories">test</CategorySelection> -->
   <div class="cont">
     <h2>Pregled Turizma v Tržiču</h2>
     <div class="categ" style="display: flex">
@@ -7,6 +6,12 @@
         {{ drzava_izbrana ?? 'Država' }}
       </div>
       <div class="dropdown" v-if="toggle_d">
+        <a
+          class="dropdownElement"
+          @click="[(drzava_izbrana = null), toggle_drzava()]"
+        >
+          Vse države
+        </a>
         <a
           class="dropdownElement"
           v-for="drzava in getAllCountries"
@@ -20,8 +25,14 @@
       <div class="categ1" @click="toggle_l = !toggle_l, toggle_d=false">
         {{ leto_izbrano ?? 'Leto' }}
       </div>
-      <div class="dropdown" v-if="toggle_l">
-        <a
+        <div class="dropdown" v-if="toggle_l">
+          <a
+            class="dropdownElement"
+            @click="[(leto_izbrano = null), toggle_leto()]"
+          >
+            vsa leta
+          </a>
+          <a
           class="dropdownElement"
           v-for="leto in getAllYears"
           v-bind:key="leto"
@@ -31,16 +42,9 @@
         </a>
       </div>
 
-      <!-- <div class="categ1">Kapaciteta (WIP)</div>
-      <div class="categ1">...</div>
-      <div class="categ1">...</div> -->
+
     </div>
-    <!-- <h2>{{ selCategory }}</h2> -->
-    <!-- Mesec: {{ Months[obj.month] }} Leto: {{ obj.year }}<br />
-    Skupaj noči: {{ obj.nights_total }}<br />
-    davki skupaj: {{ obj.taxes_total }}<br />
-    kapaciteta: {{ obj.capacity }}<br />
-    zasedenost: {{ obj.occupancy }} %<br />-->
+
 
     <div class="displayContent">
       <div style="flex=1;">
@@ -104,6 +108,14 @@ export default {
       toggle_d: false
       // data: null
       // filteredData: null
+    }
+  },
+  watch:{
+    leto_izbrano: function(val){
+      this.$emit('leto-izbrano', val)
+    },
+    drzava_izbrana: function(val){
+      this.$emit('drzava-izbrana', val)
     }
   },
 

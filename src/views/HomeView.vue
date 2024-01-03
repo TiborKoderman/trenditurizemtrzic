@@ -8,10 +8,10 @@ import numberIncreaseFromZero from '../components/numberIncreaseFromZero.vue'
 
 <template>
   <main>
-    <GMapMap
-      :center="{ lat: 46.36206953456084, lng: 14.308336492747152 }"
-      :zoom="13"
-      style="width: 100vw; height: 100vh"
+    <GMapAutocomplete placeholder="Search for a location" @place_changed="setPlace"
+      style="position: absolute; z-index: 2; font-size: medium; top: 10%; right: 10%; padding: 1%">
+    </GMapAutocomplete>
+    <GMapMap :center="{ lat: 46.36206953456084, lng: 14.308336492747152 }" :zoom="13" style="width: 100vw; height: 100vh"
       :options="{
         zoomControl: true,
         mapTypeControl: false,
@@ -20,48 +20,28 @@ import numberIncreaseFromZero from '../components/numberIncreaseFromZero.vue'
         rotateControl: false,
         fullscreenControl: false,
         styles: mapStyles
-      }"
-    >
-      <GMapMarker
-        :key="place"
-        v-for="(place, k) in places"
-        :position="{ lat: place.lat, lng: place.lng }"
-        :clickable="true"
-        :draggable="false"
-        :icon="{
+      }">
+      <GMapMarker :key="place" v-for="(place, k) in places" :position="{ lat: place.lat, lng: place.lng }"
+        :clickable="true" :draggable="false" :icon="{
           url: markerImg
-        }"
-      >
+        }">
         <!-- draw a circle around the marker-->
-        <GMapCircle
-          :key="place"
-          :center="{ lat: place.lat, lng: place.lng }"
-          :radius="300"
-          :options="{
-            fillColor: '#84a07c',
-            fillOpacity: 0.35,
-            strokeWeight: 1
-          }"
-          v-if="getPercentageOfTotalProfitsForEachPlace[k]"
-        >
+        <GMapCircle :key="place" :center="{ lat: place.lat, lng: place.lng }" :radius="300" :options="{
+          fillColor: '#84a07c',
+          fillOpacity: 0.35,
+          strokeWeight: 1
+        }" v-if="getPercentageOfTotalProfitsForEachPlace[k]">
         </GMapCircle>
-        <GMapInfoWindow
-          class="infoWindow"
-          :opened="true"
-          :options="{
-            pixelOffset: {
-              width: 0,
-              height: -10
-            },
-            maxWidth: 110,
-            maxHeigth: 50
-          }"
-          v-if="getPercentageOfTotalProfitsForEachPlace[k]"
-        >
-          <percentageIncreaseFromZero
-            :number="getPercentageOfTotalProfitsForEachPlace[k]"
-            style="color: black; font-weight: bolder"
-          >
+        <GMapInfoWindow class="infoWindow" :opened="true" :options="{
+          pixelOffset: {
+            width: 0,
+            height: -10
+          },
+          maxWidth: 110,
+          maxHeigth: 50
+        }" v-if="getPercentageOfTotalProfitsForEachPlace[k]">
+          <percentageIncreaseFromZero :number="getPercentageOfTotalProfitsForEachPlace[k]"
+            style="color: black; font-weight: bolder">
             <!-- <h1 style="color:black; font-weight: bolder;">{{getPercentageOfTotalProfitsForEachPlace[k]}}</h1> -->
           </percentageIncreaseFromZero>
           <p style="font-size: smaller;">
@@ -71,32 +51,27 @@ import numberIncreaseFromZero from '../components/numberIncreaseFromZero.vue'
         </GMapInfoWindow>
       </GMapMarker>
     </GMapMap>
-    <HomeGraf
-      :apidata="apidata"
-      :selCategory="selCategory"
-      @leto-izbrano="
-        (val) => {
-          leto_izbrano = val
-          console.log(leto_izbrano)
-        }
-      "
-      @drzava-izbrana="
-        (val) => {
-          drzava_izbrana = val
-          console.log(drzava_izbrana)
-        }
-      "
-    />
-    <CategorySelection :categories="getAllCategories" @category-selected="catSelect"
-      >test</CategorySelection
-    >
+    <HomeGraf :apidata="apidata" :selCategory="selCategory" @leto-izbrano="(val) => {
+      leto_izbrano = val
+      console.log(leto_izbrano)
+    }
+      " @drzava-izbrana="(val) => {
+    drzava_izbrana = val
+    console.log(drzava_izbrana)
+  }
+    " />
+    <CategorySelection :categories="getAllCategories" @category-selected="catSelect">test</CategorySelection>
   </main>
 </template>
 
 <script>
+import { ref } from 'vue';
 import places_json from '../json/mesta.json'
 import mapStyles from '../json/mapStyle.json'
 import markerImg from '../assets/marker.png'
+
+const places = ref(places_json);
+const selectedLocation = ref(null);
 
 export default {
   name: 'HomeView',
@@ -153,7 +128,7 @@ export default {
 
     openAllMarkers() {
       this.openMarkers = []
-      this.places.forEach((place) => {
+      places.value.forEach((place) => {
         this.openMarkers.push(place.name)
       })
     },
@@ -188,6 +163,20 @@ export default {
         .catch((error) => {
           console.error('Error fetching API data:', error)
         })
+    },
+    setPlace(place) {
+      console.log(place)
+      // Postavitev lokacije na podlagi izbranega kraja
+      place.lat = place.geometry.location.lat();
+      place.lng = place.geometry.location.lng();
+
+      // Poišči izbrane podatke o mestu iz mesta.json
+      const selectedPlaceData = places.value[place.name];
+
+      // Posodobi seznam mest, da vsebuje le izbrano lokacijo
+      places.value = [{ name: place.name, lat: selectedPlaceData.lat, lng: selectedPlaceData.lng }];
+
+      console.log(places.value);
     }
   },
   computed: {

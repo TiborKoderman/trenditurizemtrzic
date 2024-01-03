@@ -5,7 +5,6 @@
       <div class="chart">
       <svg width="350" height="200" ref="chart"></svg>
       <div class="chart-description">
-        <h3>Zasedenost po mesecih</h3>
       </div>
     </div>
     </div>

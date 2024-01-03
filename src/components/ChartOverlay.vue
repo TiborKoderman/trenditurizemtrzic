@@ -1,36 +1,36 @@
 <!-- ChartOverlay.vue -->
 <template>
-    <div class="chart-overlay">
-      <!-- <h3>Graf Podatkov</h3> -->
-      <div class="chart">
+  <div class="chart-overlay">
+    <!-- <h3>Graf Podatkov</h3> -->
+    <div class="chart">
       <svg width="350" height="200" ref="chart"></svg>
       <div class="chart-description">
       </div>
     </div>
-    </div>
-  </template>
+  </div>
+</template>
   
-  <script>
-  import * as d3 from 'd3';
-  
-  export default {
-    props: {
-      data: Array, // Pass data to the overlay
+<script>
+import * as d3 from 'd3';
+
+export default {
+  props: {
+    data: Array, // Pass data to the overlay
+  },
+  watch: {
+    data: 'drawChart', // Watch for changes in data prop and trigger drawChart method
+  },
+  mounted() {
+    this.drawChart();
+  },
+  methods: {
+    updateChart(newData) {
+      // Update the chart when data changes
+      this.drawChart(newData);
     },
-    watch: {
-        data: 'drawChart', // Watch for changes in data prop and trigger drawChart method
-    },
-    mounted() {
-      this.drawChart();
-    },
-    methods: {
-       updateChart(newData) {
-            // Update the chart when data changes
-            this.drawChart(newData);
-        },
-        
-      drawChart() {
-        // Your D3.js chart drawing logic here
+
+    drawChart() {
+      // Your D3.js chart drawing logic here
       // You can access the data using this.apidata.results
       const svg = d3.select(this.$refs.chart);
       const margin = { top: 20, right: 20, bottom: 30, left: 50 };
@@ -43,8 +43,8 @@
       if (this.drzava && this.leto) {
         // Če sta izbrani država in leto, filtrirajte podatke
         occupancyData = occupancyData.filter(d => d.country_name === this.drzava && d.year === this.leto);
-        }
-      
+      }
+
       const xScale = d3
         .scaleBand()
         .range([0, width])
@@ -56,11 +56,14 @@
         .range([height, 0])
         .domain([0, d3.max(occupancyData, d => +d.occupancy)]);
 
-        const xAxis = d3.axisBottom(xScale)
-        .tickFormat(d => {
-          const date = new Date(d);
-          return date.toLocaleString('default', { month: 'short' });
-        });
+      const xAxis = d3.axisBottom(xScale).tickFormat(d => {
+        const [year, month] = d.split('-');
+        // Construct a valid date string using ISO format
+        const dateString = `${year}-${month.padStart(2, '0')}-01`;
+        const date = new Date(dateString);
+        return date.toLocaleString('default', { month: 'short' });
+      });
+
 
       const yAxis = d3.axisLeft(yScale);
 
@@ -69,7 +72,7 @@
       svg.attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom);
       // svg.attr('stroke', 'orange')
       svg.attr('fill', '#b7dbad')
-    
+
 
       const g = svg
         .append('g')
@@ -82,7 +85,7 @@
       g.append('g')
         .call(yAxis);
 
-        g.selectAll('.bar')
+      g.selectAll('.bar')
         .data(occupancyData)
         .enter().append('rect')
         .attr('class', 'bar')
@@ -92,30 +95,29 @@
         .attr('height', 0)
         .attr('fill', '#b7dbad')
         .transition()
-        .duration(1000)
+        .duration(2000)
         .attr('y', d => yScale(+d.occupancy))
         .attr('height', d => height - yScale(+d.occupancy));
-      },
     },
-  };
-  </script>
+  },
+};
+</script>
   
-  <style scoped>
-  .chart-overlay {
-    /* display: inline-block; */
-    color:rgb(255, 255, 255);
-    padding: 5px;
-    border-radius: 20px;
-    /* align to the right */
-  }
-  
-  .chart h3 {
-    margin-bottom: 10px;
-  }
-
-  .chart-description {
-  text-align: center;
+<style scoped>
+.chart-overlay {
+  /* display: inline-block; */
+  color: rgb(255, 255, 255);
+  padding: 5px;
+  border-radius: 20px;
+  /* align to the right */
 }
 
-  </style>
+.chart h3 {
+  margin-bottom: 10px;
+}
+
+.chart-description {
+  text-align: center;
+}
+</style>
   

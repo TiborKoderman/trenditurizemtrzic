@@ -24,7 +24,7 @@ export default {
       selected: 'all',
       visibleCategories: [],
       currentPage: 1,
-      categoriesPerPage: 5
+      categoriesPerPage: 2
     }
   },
   components: { Pill },
@@ -70,8 +70,9 @@ export default {
 <style>
 .categoryContainer {
   position: absolute;
-  top: 0;
-  width: 100%;
+  top: 17%;
+  left: 8.55%;
+  width: 50em;
   z-index: 999;
   text-align: center;
 }
@@ -90,6 +91,7 @@ export default {
   top: 50%;
   transform: translateY(-50%);
   font-size: 1.5rem;
+  padding: 5px;
   cursor: pointer;
   color: white;
 }

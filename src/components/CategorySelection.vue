@@ -71,7 +71,7 @@ export default {
 .categoryContainer {
   position: absolute;
   top: 17%;
-  left: 8.55%;
+  left: 8.35%;
   width: 50em;
   z-index: 999;
   text-align: center;

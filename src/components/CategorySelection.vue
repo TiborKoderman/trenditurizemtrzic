@@ -70,8 +70,8 @@ export default {
 <style>
 .categoryContainer {
   position: absolute;
-  top: 17%;
-  left: 8.55%;
+  top: 15%;
+  left: 8.35%;
   width: 50em;
   z-index: 999;
   text-align: center;
@@ -82,7 +82,7 @@ export default {
   white-space: nowrap;
   gap: 0.5rem;
   padding: 0.5rem;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(0, 0, 0, 0.0);
   position: relative;
   justify-content: center;
 }

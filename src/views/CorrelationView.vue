@@ -1,5 +1,9 @@
 <template>
-  
+  <main>
+    <h1>Correlation</h1>
+
+    
+  </main>
 </template>
 
 <script>

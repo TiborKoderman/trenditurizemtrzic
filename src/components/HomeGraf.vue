@@ -1,5 +1,6 @@
 <template>
   <div class="cont">
+    <slot></slot>
     <h2>Pregled Turizma v Tržiču</h2>
     <div class="categ" style="display: flex">
       <div class="categ1" @click="toggle_d = !toggle_d; toggle_l = false">
@@ -18,7 +19,7 @@
       <div class="categ1" @click="toggle_l = !toggle_l, toggle_d = false">
         {{ leto_izbrano ?? 'Leto' }}
       </div>
-      <div class="dropdown" v-if="toggle_l">
+      <div class="dropdown" v-if="toggle_l" id="year_dropdown">
         <a class="dropdownElement" @click="[(leto_izbrano = null), toggle_leto()]" id="year_element">
           vsa leta
         </a>
@@ -451,7 +452,7 @@ h2 {
   text-align: center;
   border: 1px solid azure;
   border-radius: 8px;
-  background-color: azure;
+  background-color: azure;  
   color: black;
 }
 

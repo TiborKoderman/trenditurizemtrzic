@@ -55,7 +55,7 @@
         </table>
       </div>
       <!-- ChartOverlay as an overlay -->
-      <ChartOverlay :data="filterData" @close="hideChartOverlay" style="flex=1; " />
+      <ChartOverlay :data="filterData" :leto_izbrano="leto_izbrano" :drzava_izbrana="drzava_izbrana" @close="hideChartOverlay" style="flex=1; " />
       <div class="legend" @click="toggleLegend">
         <div class="grid">
           <h3>Zasedenost po mesecih:</h3>
@@ -230,9 +230,6 @@ export default {
       })
       return total.toFixed(0)
     }
-  },
-  components: {
-    ChartOverlay
   },
   computed: {
     barLen() {

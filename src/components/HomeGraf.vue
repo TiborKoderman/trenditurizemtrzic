@@ -1,5 +1,6 @@
 <template>
   <div class="cont">
+    <slot></slot>
     <h2>Pregled Turizma v Tržiču</h2>
     <div class="categ" style="display: flex">
       <div class="categ1" @click="toggle_d = !toggle_d; toggle_l = false">

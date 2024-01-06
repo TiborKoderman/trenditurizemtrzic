@@ -59,8 +59,9 @@ import numberIncreaseFromZero from '../components/numberIncreaseFromZero.vue'
     drzava_izbrana = val
     console.log(drzava_izbrana)
   }
-    " />
-    <CategorySelection :categories="getAllCategories" @category-selected="catSelect">test</CategorySelection>
+    " >
+    <CategorySelection :categories="getAllCategories" @category-selected="catSelect">test</CategorySelection>  
+  </HomeGraf>
   </main>
 </template>
 

@@ -7,7 +7,14 @@
     <h2>Popularnost kvalitete ustanove</h2>
     <p>
       <!-- TODO: Make graphs -->
+
+      <!-- bar graf kjer je x število zvezdic, y pa skupek davkov -->
       {{ totalRatingsByStar }} 
+    </p>
+    <h2>Skupek davkov glede na kvaliteto ustanove</h2>
+    <p>
+      {{ totalRatingsByStar }}
+      
     </p>
     <h2>Povprečna kvaliteta ustanove glede na državo</h2>
     <p>

@@ -5,10 +5,6 @@
     <StarPopularity v-if="Object.keys(totalRatingsByStar).length > 0" :data="totalRatingsByStar" />
     <h2>Skupek davkov glede na kvaliteto ustanove</h2>
     <TaxBar v-if="Object.keys(totalRatingsByStar).length > 0" :data="totalRatingsByStar" />
-    <p>
-      {{ totalRatingsByStar }}
-
-    </p>
     <h2>Povprečna kvaliteta ustanove glede na državo</h2>
     <AverageStars v-if="Object.keys(averageStarsByCountry).length > 0" :data="averageStarsByCountry" />
     <h2>
@@ -19,8 +15,6 @@
 </template>
 
 <script>
-import { computed } from 'vue'
-import { median } from 'd3'
 import median_income_json from '../json/median-income.json'
 import countryNameTransl from '../json/countryNameTransl.json'
 import ScatterplotStars from '../components/ScatterplotStars.vue';
@@ -139,6 +133,10 @@ export default {
         avgs[key] = (1 * value[1].cnt + 2 * value[2].cnt + 3 * value[3].cnt + 4 * value[4].cnt + 5 * value[5].cnt) / (value[1].cnt + value[2].cnt + value[3].cnt + value[4].cnt + value[5].cnt)
       }
       console.log(avgs)
+      //sort descending
+      avgs = Object.fromEntries(
+        Object.entries(avgs).sort(([, a], [, b]) => b - a)
+      );
       return avgs
     },
 

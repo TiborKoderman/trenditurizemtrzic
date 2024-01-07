@@ -2,13 +2,17 @@
   <main>
     <h1>Correlation</h1>
     <p>
+      {{ get }}
+    </p>
+    <p>
+      <!-- TODO: Make graphs -->
       {{ getTotalRatingsByStar }}
     </p>
     <p>
       {{ averageStarsByCountry }}
     </p>
     <p>
-      <!-- {{ mapAvgStarsWithIncomeC }} -->
+      {{ mapAvgStarsWithIncomeC }}
     </p>
   </main>
 </template>
@@ -16,6 +20,7 @@
 <script>
 import { computed } from 'vue'
 import median_income_json from '../json/median-income.json'
+import countryNameTransl from '../json/countryNameTransl.json'
 import { median } from 'd3'
 
 
@@ -23,13 +28,15 @@ export default {
   data() {
     return {
       apidata: null,
-      median_income: median_income_json
+      median_income: median_income_json,
+      countryNameTransl: countryNameTransl
     }
   },
   async mounted() {
     //wait for this to finish before doing anything else
     await this.getApiData()
     // this.getAllPlaces()
+    this.getAllCountries()
     //get coordinates for all places
   },
   methods: {
@@ -82,18 +89,12 @@ export default {
     },
 
     getStarsByCountry() {
-      var totals = {
-        1: { cnt: 0, sum: 0 },
-        2: { cnt: 0, sum: 0 },
-        3: { cnt: 0, sum: 0 },
-        4: { cnt: 0, sum: 0 },
-        5: { cnt: 0, sum: 0 }
-      }
+
       var countries = {
 
       }
       if (this.apidata == null) {
-        return totals
+        return countries
       }
       this.apidata.results.forEach((element) => {
         //count the stars in the string
@@ -127,28 +128,35 @@ export default {
       return avgs
     },
 
+    getCountryData(country){
+      var data = this.median_income
+      //find object where "country" property is equal to country
+      var found = data.find(function(element) {
+        return element.country == country;
+      });
+
+      return found
+    },
+
     mapAvgStarsWithIncome(){
+      if (this.apidata == null) {
+        return {}
+      }
       var avgs = this.getAverageStarsByCountry()
       var income = this.median_income
       var mapped = {}
       for (const [key, value] of Object.entries(avgs)) {
+        let translatedKey = this.countryNameTransl[key]
         mapped[key] = {
           avg: value,
-          income: this.getCountryData(key).medianIncomeByCountry_gdpPerCapitaPPP
+          income: this.getCountryData(translatedKey)?.medianIncomeByCountry_medianIncome
         }
       }
       console.log(mapped)
       return mapped
     },
 
-    getCountryData(country){
-      var data = this.median_income
-      for (const [key, value] of Object.entries(data)) {
-        if(value.country == country){
-          return value
-        }
-      }
-    },
+
 
     getAllYears() {
       //unique array of years

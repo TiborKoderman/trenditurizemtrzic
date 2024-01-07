@@ -64,15 +64,12 @@ export default {
   white-space: nowrap;
   gap: 0.5rem;
   padding: 0.5rem;
-  background: rgba(0, 0, 0, 0.25);
+  /* background: rgba(0, 0, 0, 0.25); */
   position: relative;
 
-  /* Hide scrollbar */
-  /* -ms-overflow-style: none; /* IE and Edge */
-  /* scrollbar-width: none; Firefox */
-
-  /* allow horizontal scroll with mouse */
   scroll-behavior: smooth;
+
+  /* blur the end of the element */
 }
 .navArrow {
   position: absolute;

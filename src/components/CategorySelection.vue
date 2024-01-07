@@ -70,8 +70,8 @@ export default {
 <style>
 .categoryContainer {
   position: absolute;
-  top: 15%;
-  left: 8.35%;
+  top: 15vh;
+  left: 5vw;
   width: 50em;
   z-index: 999;
   text-align: center;

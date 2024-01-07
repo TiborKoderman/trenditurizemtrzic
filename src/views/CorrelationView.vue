@@ -14,9 +14,7 @@
 
     </p>
     <h2>Povprečna kvaliteta ustanove glede na državo</h2>
-    <p>
-      {{ averageStarsByCountry }}
-    </p>
+    <AverageStars v-if="Object.keys(averageStarsByCountry).length > 0" :data="averageStarsByCountry" />
     <h2>
       Korelacija med povprečno kvaliteto ustanove in povprečnim dohodkom na prebivalca
     </h2>
@@ -30,7 +28,7 @@ import { median } from 'd3'
 import median_income_json from '../json/median-income.json'
 import countryNameTransl from '../json/countryNameTransl.json'
 import ScatterplotStars from '../components/ScatterplotStars.vue';
-
+import AverageStars from '../components/AverageStars.vue';
 
 export default {
   data() {
@@ -42,6 +40,7 @@ export default {
   },
   components: {
     ScatterplotStars,
+    AverageStars,
   },
   async mounted() {
     //wait for this to finish before doing anything else

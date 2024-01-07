@@ -4,13 +4,18 @@
     <p>
       {{ get }}
     </p>
+    <h2>Popularnost kvalitete ustanove</h2>
     <p>
       <!-- TODO: Make graphs -->
-      {{ getTotalRatingsByStar }}
+      {{ totalRatingsByStar }} 
     </p>
+    <h2>Povprečna kvaliteta ustanove glede na državo</h2>
     <p>
       {{ averageStarsByCountry }}
     </p>
+    <h2>
+      Korelacija med povprečno kvaliteto ustanove in povprečnim dohodkom na prebivalca
+    </h2>
     <p>
       {{ mapAvgStarsWithIncomeC }}
     </p>
@@ -202,6 +207,9 @@ export default {
 
   },
   computed: {
+    totalRatingsByStar: function () {
+      return this.getTotalRatingsByStar()
+    },
     starsByCountry: function () {
       return this.getStarsByCountry()
     },

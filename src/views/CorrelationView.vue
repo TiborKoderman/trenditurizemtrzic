@@ -1,20 +1,17 @@
 <template>
   <main>
     <h1>Correlation</h1>
-    <p>
-      {{ get }}
-    </p>
     <h2>Popularnost kvalitete ustanove</h2>
     <p>
       <!-- TODO: Make graphs -->
 
       <!-- bar graf kjer je x število zvezdic, y pa skupek davkov -->
-      {{ totalRatingsByStar }} 
+      {{ totalRatingsByStar }}
     </p>
     <h2>Skupek davkov glede na kvaliteto ustanove</h2>
     <p>
       {{ totalRatingsByStar }}
-      
+
     </p>
     <h2>Povprečna kvaliteta ustanove glede na državo</h2>
     <p>
@@ -23,17 +20,16 @@
     <h2>
       Korelacija med povprečno kvaliteto ustanove in povprečnim dohodkom na prebivalca
     </h2>
-    <p>
-      {{ mapAvgStarsWithIncomeC }}
-    </p>
+    <ScatterplotStars v-if="Object.keys(mapAvgStarsWithIncomeC).length > 0" :data="mapAvgStarsWithIncomeC" />
   </main>
 </template>
 
 <script>
 import { computed } from 'vue'
+import { median } from 'd3'
 import median_income_json from '../json/median-income.json'
 import countryNameTransl from '../json/countryNameTransl.json'
-import { median } from 'd3'
+import ScatterplotStars from '../components/ScatterplotStars.vue';
 
 
 export default {
@@ -43,6 +39,9 @@ export default {
       median_income: median_income_json,
       countryNameTransl: countryNameTransl
     }
+  },
+  components: {
+    ScatterplotStars,
   },
   async mounted() {
     //wait for this to finish before doing anything else
@@ -87,7 +86,6 @@ export default {
         return totals
       }
 
-
       this.apidata.results.forEach((element) => {
         //count the stars in the string
         let stars = element.category.split('*').length;
@@ -111,7 +109,7 @@ export default {
       this.apidata.results.forEach((element) => {
         //count the stars in the string
 
-        if(countries[element.country_name] == null){
+        if (countries[element.country_name] == null) {
           countries[element.country_name] = {
             1: { cnt: 0, sum: 0 },
             2: { cnt: 0, sum: 0 },
@@ -129,28 +127,28 @@ export default {
 
       return countries
     },
-    getAverageStarsByCountry(){
+    getAverageStarsByCountry() {
       var totals = this.getStarsByCountry();
 
       var avgs = {}
       for (const [key, value] of Object.entries(totals)) {
-        avgs[key] = (1*value[1].cnt + 2*value[2].cnt + 3*value[3].cnt + 4*value[4].cnt + 5*value[5].cnt)/(value[1].cnt + value[2].cnt + value[3].cnt + value[4].cnt + value[5].cnt)
+        avgs[key] = (1 * value[1].cnt + 2 * value[2].cnt + 3 * value[3].cnt + 4 * value[4].cnt + 5 * value[5].cnt) / (value[1].cnt + value[2].cnt + value[3].cnt + value[4].cnt + value[5].cnt)
       }
       console.log(avgs)
       return avgs
     },
 
-    getCountryData(country){
+    getCountryData(country) {
       var data = this.median_income
       //find object where "country" property is equal to country
-      var found = data.find(function(element) {
+      var found = data.find(function (element) {
         return element.country == country;
       });
 
       return found
     },
 
-    mapAvgStarsWithIncome(){
+    mapAvgStarsWithIncome() {
       if (this.apidata == null) {
         return {}
       }
@@ -159,12 +157,15 @@ export default {
       var mapped = {}
       for (const [key, value] of Object.entries(avgs)) {
         let translatedKey = this.countryNameTransl[key]
-        mapped[key] = {
-          avg: value,
-          income: this.getCountryData(translatedKey)?.medianIncomeByCountry_medianIncome
+        let countryData = this.getCountryData(translatedKey);
+        if (countryData && countryData.medianIncomeByCountry_medianIncome !== undefined) {
+          mapped[key] = {
+            avg: value,
+            income: countryData.medianIncomeByCountry_medianIncome,
+          };
         }
       }
-      console.log(mapped)
+      console.log("mapped:", mapped)
       return mapped
     },
 
@@ -220,12 +221,14 @@ export default {
     starsByCountry: function () {
       return this.getStarsByCountry()
     },
-    averageStarsByCountry: function(){
+    averageStarsByCountry: function () {
       return this.getAverageStarsByCountry()
     },
 
-    mapAvgStarsWithIncomeC: function(){
-      return this.mapAvgStarsWithIncome()
+    mapAvgStarsWithIncomeC: function () {
+      const data = this.mapAvgStarsWithIncome();
+      console.log(data);
+      return data;
     }
   }
 }

@@ -2,13 +2,9 @@
   <main>
     <h1>Correlation</h1>
     <h2>Popularnost kvalitete ustanove</h2>
-    <p>
-      <!-- TODO: Make graphs -->
-
-      <!-- bar graf kjer je x število zvezdic, y pa skupek davkov -->
-      {{ totalRatingsByStar }}
-    </p>
+    <StarPopularity v-if="Object.keys(totalRatingsByStar).length > 0" :data="totalRatingsByStar" />
     <h2>Skupek davkov glede na kvaliteto ustanove</h2>
+    <TaxBar v-if="Object.keys(totalRatingsByStar).length > 0" :data="totalRatingsByStar" />
     <p>
       {{ totalRatingsByStar }}
 
@@ -29,6 +25,8 @@ import median_income_json from '../json/median-income.json'
 import countryNameTransl from '../json/countryNameTransl.json'
 import ScatterplotStars from '../components/ScatterplotStars.vue';
 import AverageStars from '../components/AverageStars.vue';
+import StarPopularity from '../components/StarPopularity.vue';
+import TaxBar from '../components/TaxBar.vue';
 
 export default {
   data() {
@@ -41,6 +39,8 @@ export default {
   components: {
     ScatterplotStars,
     AverageStars,
+    StarPopularity,
+    TaxBar,
   },
   async mounted() {
     //wait for this to finish before doing anything else
@@ -80,22 +80,27 @@ export default {
         3: { cnt: 0, sum: 0 },
         4: { cnt: 0, sum: 0 },
         5: { cnt: 0, sum: 0 }
-      }
+      };
       if (this.apidata == null) {
-        return totals
+        return totals;
       }
 
       this.apidata.results.forEach((element) => {
-        //count the stars in the string
-        let stars = element.category.split('*').length;
+        // Use regex to match all occurrences of "*"
+        let stars = (element.category.match(/\*/g) || []).length;
+        console.log(stars)
+        console.log(element.category)
+        // Count occurrences properly
+        if (stars > 0 && stars <= 5) {
+          totals[stars].cnt += parseInt(element.nights_total);
+          totals[stars].sum += parseFloat(element.taxes_total);
+        }
+      });
+      console.log(totals);
 
-        totals[stars].cnt += parseInt(element.nights_total)
-        totals[stars].sum += parseFloat(element.taxes_total)
-      })
-      console.log(totals)
-
-      return totals
+      return totals;
     },
+
 
     getStarsByCountry() {
 

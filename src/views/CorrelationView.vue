@@ -1,20 +1,28 @@
 <template>
   <main>
-    <h1>Correlation</h1>
-    <h2>Popularnost kvalitete ustanove</h2>
-    <StarPopularity v-if="Object.keys(totalRatingsByStar).length > 0" :data="totalRatingsByStar" />
-    <h2>Skupek davkov glede na kvaliteto ustanove</h2>
-    <TaxBar v-if="Object.keys(totalRatingsByStar).length > 0" :data="totalRatingsByStar" />
-    <p>
-      {{ totalRatingsByStar }}
+    <div class="grid-container">
+      <div class="graph" id="starpopular">
+        <h2>Popularnost kvalitete ustanove</h2>
+        <StarPopularity v-if="Object.keys(totalRatingsByStar).length > 0" :data="totalRatingsByStar" />
+      </div>
 
-    </p>
-    <h2>Povprečna kvaliteta ustanove glede na državo</h2>
-    <AverageStars v-if="Object.keys(averageStarsByCountry).length > 0" :data="averageStarsByCountry" />
-    <h2>
-      Korelacija med povprečno kvaliteto ustanove in povprečnim dohodkom na prebivalca
-    </h2>
-    <ScatterplotStars v-if="Object.keys(mapAvgStarsWithIncomeC).length > 0" :data="mapAvgStarsWithIncomeC" />
+      <div class="graph" id="scatterplot">
+        <h2>Korelacija med povprečno kvaliteto ustanove in povprečnim dohodkom na prebivalca</h2>
+        <ScatterplotStars v-if="Object.keys(mapAvgStarsWithIncomeC).length > 0" :data="mapAvgStarsWithIncomeC" />
+      </div>
+
+
+      <div class="graph" id="avgstars">
+        <h2>Povprečna kvaliteta ustanove glede na državo</h2>
+        <AverageStars v-if="Object.keys(averageStarsByCountry).length > 0" :data="averageStarsByCountry" />
+      </div>
+
+      <div class="graph" id="taxbar">
+        <h2>Skupek davkov glede na kvaliteto ustanove</h2>
+        <TaxBar v-if="Object.keys(totalRatingsByStar).length > 0" :data="totalRatingsByStar" />
+      </div>
+      
+    </div>
   </main>
 </template>
 
@@ -239,15 +247,44 @@ export default {
 </script>
 
 <style lang="css" scoped>
-/* style like an article*/
 main {
-  max-width: 800px;
+  max-width: 100vw;
   margin: 0 auto;
-  padding: 30px;
+  padding: 2vh 0vw 5vh 2vw;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 18px;
   display: flex;
   line-height: 1.5;
   color: #fff;
 }
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 54vw 40vw; /* Prilagojene širine */
+  grid-gap: 10px;
+}
+
+.graph {
+  background-color: #333;
+  padding: 2vh;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#starpopular {
+  grid-column: 1 / span 1; /* Raztegovanje na 1 celico */
+}
+
+#avgstars {
+  grid-column: 1 / span 1; /* Raztegovanje na 1 celico */
+}
+
+#scatterplot, #taxbar {
+  grid-column: span 1; /* Zavzemite 1 celico */
+}
+
+h2 {
+  color: #fbfbfb;
+}
 </style>
+

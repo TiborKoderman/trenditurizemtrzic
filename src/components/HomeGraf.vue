@@ -1,30 +1,24 @@
 <template>
   <div class="cont">
+    <slot></slot>
     <h2>Pregled Turizma v Tržiču</h2>
     <div class="categ" style="display: flex">
-      <div class="categ1" @click="toggle_d = !toggle_d; toggle_l=false">
+      <div class="categ1" @click="toggle_d = !toggle_d; toggle_l = false">
         {{ drzava_izbrana ?? 'Država' }}
       </div>
       <div id="country_dropdown" class="dropdown" v-if="toggle_d">
-        <a
-          class="dropdownElement"
-          id="country_element"
-          @click="[(drzava_izbrana = null), toggle_drzava()]"
-        >
+        <a class="dropdownElement" id="country_element" @click="[(drzava_izbrana = null), toggle_drzava()]">
           Vse države
         </a>
-        <a
-          class="dropdownElement"
-          id="country_element"
-          v-for="drzava in getAllCountries"
-          v-bind:key="drzava"
-          @click="[(drzava_izbrana = drzava), toggle_drzava()]"
-        >
+        <a class="dropdownElement" id="country_element" v-for="drzava in getAllCountries" v-bind:key="drzava"
+          @click="[(drzava_izbrana = drzava), toggle_drzava()]">
           {{ drzava }}
         </a>
       
       </div>
+
       <div class="categ1" @click="toggle_l = !toggle_l, toggle_d=false">
+
         {{ leto_izbrano ?? 'Leto' }}
       </div>
       <div class="dropdown" v-if="toggle_l" id="year_dropdown">
@@ -42,7 +36,7 @@
 
 
     <div class="displayContent">
-      <div style="flex=1;">
+      <div class="statistika" style="flex=1;">
         <table v-if="drzava_izbrana != null && leto_izbrano != null" class="statisticalData">
           <tr>
             <td>Skupno število nočitev:</td>
@@ -62,9 +56,17 @@
           </tr>
         </table>
       </div>
-
       <!-- ChartOverlay as an overlay -->
-      <ChartOverlay :data="filterData" @close="hideChartOverlay" style="flex=1; " />
+      <ChartOverlay :data="filterData" :leto_izbrano="leto_izbrano" :drzava_izbrana="drzava_izbrana" @close="hideChartOverlay" style="flex=1; " />
+      <div class="legend" @click="toggleLegend">
+        <div class="grid">
+          <h3>Zasedenost po mesecih:</h3>
+          <p class="legend-button" v-if="!showLegend">Pokaži več</p>
+          <p class="legend-button" v-else>Skrij legendo</p>
+        </div>
+        <p v-if="showLegend">Država: {{ drzava_izbrana || 'Vse države' }}</p>
+        <p v-if="showLegend">Leto: {{ leto_izbrano || 'Vsa leta' }}</p>
+      </div>
     </div>
   </div>
 </template>
@@ -80,6 +82,7 @@ export default {
   data() {
     return {
       showOverlay: false,
+      showLegend: false,
       // apidata: null,
       Months: [
         '',
@@ -105,11 +108,11 @@ export default {
       // filteredData: null
     }
   },
-  watch:{
-    leto_izbrano: function(val){
+  watch: {
+    leto_izbrano: function (val) {
       this.$emit('leto-izbrano', val)
     },
-    drzava_izbrana: function(val){
+    drzava_izbrana: function (val) {
       this.$emit('drzava-izbrana', val)
     }
   },
@@ -122,13 +125,17 @@ export default {
   methods: {
     showChartOverlay() {
       // this.filteredData = this.filterData()
-      this.showOverlay = true
+      this.showOverlay = true;
       this.drawChart()
     },
 
     hideChartOverlay() {
-      this.showOverlay = false
+      this.showOverlay = false;
       // Optionally, you can perform any cleanup or reset logic here
+    },
+
+    toggleLegend() {
+      this.showLegend = !this.showLegend;
     },
 
     drawChart() {
@@ -226,9 +233,6 @@ export default {
       return total.toFixed(0)
     }
   },
-  components: {
-    ChartOverlay
-  },
   computed: {
     barLen() {
       return {
@@ -304,7 +308,6 @@ export default {
 
 
 <style lang="scss" scoped>
-
 #year_dropdown {
   //top: 20vh;
   left: 73%;
@@ -333,7 +336,7 @@ export default {
 .cont {
   position: absolute;
   width: 50em;
-  height: 35em;
+  height: 36em;
   // border : 1px solid gray;
   background-blend-mode: darken;
   opacity: 100%;
@@ -446,6 +449,7 @@ h2 {
   padding: 5px;
   font-weight: bold;
 }
+
 .statisticalData .value {
   margin: 5px;
   padding: 5px;
@@ -453,9 +457,10 @@ h2 {
   text-align: center;
   border: 1px solid azure;
   border-radius: 8px;
-  background-color: azure;
+  background-color: azure;  
   color: black;
 }
+
 .chart {
   display: inline-block;
   //occupy all the space left
@@ -470,7 +475,52 @@ h2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr;
-  grid-gap: 10px;
+  grid-gap: 5px;
   margin-top: 30px;
 }
+
+.grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.legend {
+  color: black;
+  padding: 10px;
+  border: 1px solid white;
+  border-radius: 8px;
+  background-color: white;
+  margin-left: 5%;
+  box-shadow: 5px 5px #000000d6;
+}
+
+.legend h3 {
+  font-size: 18px;
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
+
+.legend p {
+  font-size: 16px;
+}
+
+.statistika{
+  grid-row-start: 1;
+  grid-row-end: 3;
+}
+
+.legend-button {
+  cursor: pointer;
+  padding: 2px 5px;
+  background-color: #ffffff;
+  color: gray;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.legend-button:hover {
+  background-color: #c0c0c0;
+  color:white;
+}
+
 </style>

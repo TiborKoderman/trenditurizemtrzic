@@ -14,9 +14,11 @@
           @click="[(drzava_izbrana = drzava), toggle_drzava()]">
           {{ drzava }}
         </a>
+      
       </div>
 
-      <div class="categ1" @click="toggle_l = !toggle_l, toggle_d = false">
+      <div class="categ1" @click="toggle_l = !toggle_l, toggle_d=false">
+
         {{ leto_izbrano ?? 'Leto' }}
       </div>
       <div class="dropdown" v-if="toggle_l" id="year_dropdown">
@@ -307,21 +309,23 @@ export default {
 
 <style lang="scss" scoped>
 #year_dropdown {
-  top: 20vh;
+  //top: 20vh;
   left: 73%;
-  max-height: 25vh;
-
+  max-height: 52%;
+  width: 40.5%;
 }
 
 #year_element {
-  padding-left: 135px;
-  padding-right: 135px;
+  width: 100%;
+  // padding-left: 139px;
+  // padding-right: 139px;
 }
 
 #country_dropdown {
-  top: 20vh;
-  left: 27%;
-  max-height: 25vh;
+  //top: 20vh;
+  left: 27.5%;
+  max-height: 52%;
+  overflow-y: scroll;
 }
 
 #country_element {
@@ -338,12 +342,11 @@ export default {
   opacity: 100%;
   color: white;
   font-weight: bolder;
-  top: 5vh;
+  top: 23vh;
   left: 5vw;
   // z-index: 999;
-  margin: 4rem;
   padding: 2rem;
-  margin-top: 150px;
+  // margin-top: 150px;
   /* From https://css.glass */
   background: rgba(0, 0, 0, 0.9);
   border-radius: 8px;
@@ -359,17 +362,17 @@ h2 {
 
 .categ1 {
   flex: 1;
+  position: relative;
   font-size: large;
   font-weight: bold;
   text-align: center;
   color: white;
   border: 1px solid #84a07c;
-  padding: 2px 35px 2px 20px;
+  padding: 2px 25px 2px 25px;
   background-color: #84a07c;
   border-radius: 8px;
   margin-top: 20px;
   margin: 10px;
-  position: relative;
 }
 
 .categ1:hover {
@@ -384,19 +387,23 @@ h2 {
   display: flex;
   flex-direction: column;
   position: absolute;
+  top: 32%;
+  left: 50%;
   transform: translateX(-50%);
   background-color: rgb(36, 36, 36);
+  margin-top: 20px;
   border-radius: 5px;
   z-index: 999;
   text-align: center;
   font-size: large;
 
   //maxiumum height of dropdown and add scroll
-  overflow-y: scroll;
 }
 
 .dropdownElement {
-  padding: 10px;
+  padding: 5px;
+  padding-left: 0px;
+  padding-right: 0px;
   color: rgb(255, 255, 255);
 
 }
@@ -410,6 +417,7 @@ h2 {
 
 .dropdownElement:hover {
   background-color: #ffffff;
+  border-radius: 5px;
   color: #000000;
   // border: 1px solid #b7dbad;
   cursor: pointer;

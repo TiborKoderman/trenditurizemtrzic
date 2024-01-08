@@ -51,9 +51,12 @@ export default {
 <style>
 .categoryContainer {
   position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
+
+  top: 15vh;
+  left: 5vw;
+  width: 50em;
+  height: 50px;;
+
   z-index: 999;
   text-align: center;
   overflow:auto;
@@ -64,7 +67,9 @@ export default {
   white-space: nowrap;
   gap: 0.5rem;
   padding: 0.5rem;
-  /* background: rgba(0, 0, 0, 0.25); */
+
+  background: rgba(0, 0, 0, 0.0);
+
   position: relative;
 
   scroll-behavior: smooth;

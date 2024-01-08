@@ -21,7 +21,7 @@ export default {
                 const data = this.data;
                 console.log('Data:', data);
 
-                const margin = { top: 20, right: 20, bottom: 120, left: 50 };
+                const margin = { top: 20, right: 20, bottom: 120, left: 60 };
                 const width = 1000 - margin.left - margin.right;
                 const height = 500 - margin.top - margin.bottom;
 
@@ -44,15 +44,50 @@ export default {
                     .range([0, width])
                     .padding(0.1);
 
+                // Dodajte spodnji del kode v vašo komponento črtastega grafa (bar-chart)
+
+                // Ustvarite tooltip element
+                const tooltip = d3.select('#bar-chart')
+                    .append('div')
+                    .style('position', 'absolute')
+                    .style('visibility', 'hidden')
+                    .style('background-color', 'rgba(0, 0, 0, 0.8)')
+                    .style('padding', '5px')
+                    .style('border', '1px solid #333')
+                    .style('border-radius', '5px');
+
                 svg.selectAll('rect')
                     .data(Object.entries(data))
                     .enter()
                     .append('rect')
-                    .attr('x', (d) => xScale(d[0]))  // Bars start from the left side
+                    .attr('x', (d) => xScale(d[0])) // Bars start from the left side
                     .attr('y', (d) => yScale(d[1]))
                     .attr('width', xScale.bandwidth())
                     .attr('height', (d) => height - yScale(d[1]))
-                    .style('fill', '#b7dbad');
+                    .style('fill', '#84a07c')
+                    .on('mouseover', function (event, d) {
+                        // Dodajte kvadratek ob premiku miške
+                        d3.select(this)
+                            .style('fill', 'rgba(68, 90, 61, 0.8)');
+
+                        const [country, stars] = d;
+
+                        tooltip.html(`${country}: ${stars.toFixed(3)}`)
+                            .style('visibility', 'visible');
+                    })
+                    .on('mousemove', function (event) {
+                        // Premikajte tooltip z miško
+                        tooltip.style('top', (event.pageY - 10) + 'px')
+                            .style('left', (event.pageX + 10) + 'px');
+                    })
+                    .on('mouseout', function () {
+                        // Odstranite kvadratek in skrijte tooltip ob premiku miške
+                        d3.select(this)
+                            .style('fill', '#84a07c');
+
+                        tooltip.style('visibility', 'hidden');
+                    });
+
 
                 svg.append('g')
                     .attr('transform', `translate(0, ${height})`)
@@ -60,12 +95,13 @@ export default {
                     .selectAll('text')
                     .style('text-anchor', 'end')
                     .style('font-size', '12px')
-                    .style('fill', '#dcd')
+                    .style('fill', '#fff')
                     .attr('dx', '-.8em')
-                    .attr('dy', '-.15em')
+                    .attr('dy', '-.35em')
                     .attr('transform', 'rotate(-45)');
 
                 svg.append('g')
+                    .style('font-size', '12px')
                     .call(d3.axisLeft(yScale));
 
                 svg.append('text')
@@ -74,8 +110,8 @@ export default {
                     .attr('x', 0 - height / 2)
                     .attr('dy', '1em')
                     .style('text-anchor', 'middle')
-                    .style('fill', '#dcd')
-                    .text('Average Number of Stars');
+                    .style('fill', '#fff')
+                    .text('Povprečno število zvezdic');
 
             } catch (error) {
                 console.error('Error in drawBarChart:', error);

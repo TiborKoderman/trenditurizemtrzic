@@ -19,7 +19,7 @@ export default {
         drawScatterplot() {
             try {
                 const data = this.data;
-                const margin = { top: 20, right: 100, bottom: 50, left: 50 };
+                const margin = { top: 20, right: 100, bottom: 60, left: 60 };
                 const width = 800 - margin.left - margin.right;
                 const height = 450 - margin.top - margin.bottom;
 
@@ -41,7 +41,8 @@ export default {
                     .domain([0, d3.max(Object.values(data), (d) => d.avg)])
                     .range([height, 0]);
 
-                const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+                const colorScale = d3.scaleOrdinal(d3.schemePastel1);
+
 
                 // Add circles
                 const circles = svg.selectAll('circle')
@@ -64,7 +65,9 @@ export default {
                     .attr('width', (d) => d[0].length * 10 + 5) // Adjust the width based on the length of the country name
                     .attr('height', 30)
                     .attr('rx', 2) // Optional: round corners
-                    .style('fill', '#212121') // Background color
+                    .style('border', '1px solid #333')
+                    .style('border-radius', '5px')
+                    .style('fill', 'rgba(0, 0, 0, 0.8)') // Background color
                     .style('visibility', 'hidden'); // Initially hide the background
 
                 // Add text
@@ -97,9 +100,11 @@ export default {
                 // Add axes and labels (unchanged)
                 svg.append('g')
                     .attr('transform', `translate(0, ${height})`)
+                    .style('font-size', '12px')
                     .call(d3.axisBottom(xScale));
 
                 svg.append('g')
+                    .style('font-size', '12px')
                     .call(d3.axisLeft(yScale));
 
                 svg.append('text')
@@ -108,14 +113,15 @@ export default {
                     .attr('x', 0 - height / 2)
                     .attr('dy', '1em')
                     .style('text-anchor', 'middle')
-                    .style('fill', '#dcd')
-                    .text('Avg. Št. Zvezdic');
+                    .style('fill', '#fff')
+                    .text('Povprečno število zvezdic');
 
                 svg.append('text')
                     .attr('transform', `translate(${width / 2},${height + margin.top + 20})`)
                     .style('text-anchor', 'middle')
-                    .style('fill', '#dcd')
-                    .text('Avg. Dohodek na Prebivalca');
+                    .style('fill', '#fff')
+                    .attr('dy', '0.8em')
+                    .text('Povprečni dohodek na prebivalca');
             } catch (error) {
                 console.error('Error in drawScatterplot:', error);
             }
@@ -124,5 +130,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

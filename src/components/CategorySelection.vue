@@ -73,6 +73,7 @@ export default {
   top: 15vh;
   left: 5vw;
   width: 50em;
+  height: 50px;;
   z-index: 999;
   text-align: center;
 }

@@ -306,20 +306,22 @@ export default {
 <style lang="scss" scoped>
 
 #year_dropdown {
-  top: 20vh;
+  //top: 20vh;
   left: 73%;
-  max-height: 38vh;
+  max-height: 52%;
+  width: 40.5%;
 }
 
 #year_element {
-  padding-left: 139px;
-  padding-right: 139px;
+  width: 100%;
+  // padding-left: 139px;
+  // padding-right: 139px;
 }
 
 #country_dropdown {
-  top: 20vh;
-  left: 27%;
-  max-height: 38vh;
+  //top: 20vh;
+  left: 27.5%;
+  max-height: 52%;
   overflow-y: scroll;
 }
 
@@ -363,7 +365,7 @@ h2 {
   text-align: center;
   color: white;
   border: 1px solid #84a07c;
-  padding: 2px 35px 2px 20px;
+  padding: 2px 25px 2px 25px;
   background-color: #84a07c;
   border-radius: 8px;
   margin-top: 20px;
@@ -382,7 +384,7 @@ h2 {
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 20vh;
+  top: 32%;
   left: 50%;
   transform: translateX(-50%);
   background-color: rgb(36, 36, 36);

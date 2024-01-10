@@ -72,7 +72,7 @@ export default {
                         d3.select(this)
                             .style('fill', 'rgba(68, 90, 61, 0.8)');
 
-                        tooltip.html(`Skupno davki: ${d[1].sum.toFixed(0)}`)
+                        tooltip.html(`Skupno davki: ${d[1].sum.toFixed(2)}€`)
                             .style('visibility', 'visible');
                     })
                     .on('mousemove', function (event) {

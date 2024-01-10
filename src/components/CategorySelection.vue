@@ -61,6 +61,7 @@ export default {
   z-index: 999;
   text-align: center;
   overflow: auto;
+  overflow-y:hidden;
 }
 
 .categorySelection {
@@ -72,6 +73,7 @@ export default {
   background: rgba(0, 0, 0, 0.0);
   position: relative;
   scroll-behavior: smooth;
+  overflow-y:hidden;
 }
 
 .navArrow {

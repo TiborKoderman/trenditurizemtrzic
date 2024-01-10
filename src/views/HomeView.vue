@@ -8,9 +8,9 @@ import numberIncreaseFromZero from '../components/numberIncreaseFromZero.vue'
 
 <template>
   <main>
-    <GMapAutocomplete placeholder="Search for a location" @place_changed="setPlace"
+    <!--<GMapAutocomplete placeholder="Search for a location" @place_changed="setPlace"
       style="position: absolute; z-index: 2; font-size: medium; top: 10%; right: 10%; padding: 1%">
-    </GMapAutocomplete>
+    </GMapAutocomplete>-->
     <GMapMap :center="{ lat: 46.36206953456084, lng: 14.245336492747152 }" :zoom="13" style="width: 100vw; height: 100vh"
       :options="{
         zoomControl: true,

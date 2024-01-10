@@ -307,23 +307,24 @@ export default {
 
 <style lang="scss" scoped>
 #year_dropdown {
-  top: 20vh;
+  //top: 20vh;
   left: 73%;
-  max-height: 25vh;
-
+  max-height: 52%;
+  width: 40.5%;
 }
 
 #year_element {
-  padding-left: 135px;
-  padding-right: 135px;
+  width: 100%;
+  // padding-left: 139px;
+  // padding-right: 139px;
 }
 
 #country_dropdown {
-  top: 20vh;
-  left: 27%;
-  max-height: 25vh;
+  //top: 20vh;
+  left: 27.5%;
+  max-height: 52%;
+  overflow-y: scroll;
 }
-
 #country_element {
   padding-left: 50px;
   padding-right: 50px;
@@ -364,7 +365,7 @@ h2 {
   text-align: center;
   color: white;
   border: 1px solid #84a07c;
-  padding: 2px 35px 2px 20px;
+  padding: 2px 25px 2px 25px;
   background-color: #84a07c;
   border-radius: 8px;
   margin-top: 20px;
@@ -384,8 +385,11 @@ h2 {
   display: flex;
   flex-direction: column;
   position: absolute;
+  top: 32%;
+  left: 50%;
   transform: translateX(-50%);
   background-color: rgb(36, 36, 36);
+  margin-top: 20px;
   border-radius: 5px;
   z-index: 999;
   text-align: center;
@@ -467,7 +471,7 @@ h2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr;
-  grid-gap: 5px;
+  grid-gap: 3px;
   margin-top: 30px;
 }
 
@@ -478,7 +482,8 @@ h2 {
 
 .legend {
   color: black;
-  padding: 10px;
+  padding: 5px;
+  margin-top: -3vh;
   border: 1px solid white;
   border-radius: 8px;
   background-color: white;

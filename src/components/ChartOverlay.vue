@@ -3,7 +3,7 @@
   <div class="chart-overlay">
     <!-- <h3>Graf Podatkov</h3> -->
     <div class="chart">
-      <svg width="350" height="200" ref="chart"></svg>
+      <svg width="370" height="200" ref="chart"></svg>
       <div class="chart-description">
       </div>
     </div>
@@ -36,8 +36,8 @@ export default {
       // Your D3.js chart drawing logic here
       // You can access the data using this.apidata.results
       const svg = d3.select(this.$refs.chart);
-      const margin = { top: 20, right: 10, bottom: 30, left: 30 };
-      const width = svg.node().getBoundingClientRect().width - margin.left - margin.right;
+      const margin = { top: 20, right: 10, bottom: 50, left: 30 };
+      const width = svg.node().getBoundingClientRect().width - margin.left -margin.right;
       const height = 200;
 
 
@@ -82,9 +82,11 @@ export default {
 
         g.append('g')
           .attr('transform', `translate(0, ${height})`)
+          .style('font-size', '12px')
           .call(xAxis);
 
         g.append('g')
+          .style('font-size', '12px')
           .call(yAxis);
 
         g.selectAll('.bar')
@@ -138,11 +140,13 @@ export default {
           .append('g')
           .attr('transform', `translate(${margin.left},${margin.top})`);
 
-        g.append('g')
+          g.append('g')
           .attr('transform', `translate(0, ${height})`)
+          .style('font-size', '12px')
           .call(xAxis);
 
         g.append('g')
+          .style('font-size', '12px')
           .call(yAxis);
 
         g.selectAll('.bar')
@@ -158,6 +162,8 @@ export default {
           .duration(2000)
           .attr('y', d => yScale(+d.occupancy))
           .attr('height', d => height - yScale(+d.occupancy));
+
+
       } else {
         const xScale = d3
           .scaleBand()
@@ -191,11 +197,13 @@ export default {
           .append('g')
           .attr('transform', `translate(${margin.left},${margin.top})`);
 
-        g.append('g')
+          g.append('g')
           .attr('transform', `translate(0, ${height})`)
+          .style('font-size', '12px')
           .call(xAxis);
 
         g.append('g')
+          .style('font-size', '12px')
           .call(yAxis);
 
         g.selectAll('.bar')
@@ -211,6 +219,7 @@ export default {
           .duration(2000)
           .attr('y', d => yScale(+d.occupancy))
           .attr('height', d => height - yScale(+d.occupancy));
+
 
       }
 

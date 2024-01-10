@@ -471,7 +471,7 @@ h2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr;
-  grid-gap: 5px;
+  grid-gap: 3px;
   margin-top: 30px;
 }
 
@@ -482,7 +482,8 @@ h2 {
 
 .legend {
   color: black;
-  padding: 10px;
+  padding: 5px;
+  margin-top: -3vh;
   border: 1px solid white;
   border-radius: 8px;
   background-color: white;

@@ -19,9 +19,9 @@ export default {
         drawScatterplot() {
             try {
                 const data = this.data;
-                const margin = { top: 20, right: 100, bottom: 60, left: 60 };
+                const margin = { top: 50, right: 100, bottom: 60, left: 60 };
                 const width = 800 - margin.left - margin.right;
-                const height = 450 - margin.top - margin.bottom;
+                const height = 460 - margin.top - margin.bottom;
 
                 const svg = d3
                     .select('#scatterplotstars')
@@ -51,7 +51,7 @@ export default {
                     .append('circle')
                     .attr('cx', (d) => xScale(d[1].income))
                     .attr('cy', (d) => yScale(d[1].avg))
-                    .attr('r', 7)
+                    .attr('r', 8)
                     .style('fill', (d) => colorScale(d[0]))
                     .style('transition', '0.2s ease-in-out'); // Add transition for a smooth effect
 
@@ -60,9 +60,9 @@ export default {
                     .data(Object.entries(data))
                     .enter()
                     .append('rect')
-                    .attr('x', (d) => xScale(d[1].income) + 2)
-                    .attr('y', (d) => yScale(d[1].avg) - 12)
-                    .attr('width', (d) => d[0].length * 10 + 5) // Adjust the width based on the length of the country name
+                    .attr('x', (d) => xScale(d[1].income) - 38)
+                    .attr('y', (d) => yScale(d[1].avg) - 40)
+                    .attr('width', (d) => d[0].length * 11 + 8) // Adjust the width based on the length of the country name
                     .attr('height', 30)
                     .attr('rx', 2) // Optional: round corners
                     .style('border', '1px solid #333')
@@ -75,10 +75,10 @@ export default {
                     .data(Object.entries(data))
                     .enter()
                     .append('text')
-                    .attr('x', (d) => xScale(d[1].income) + 10)
-                    .attr('y', (d) => yScale(d[1].avg) + 6)
+                    .attr('x', (d) => xScale(d[1].income) - 35)
+                    .attr('y', (d) => yScale(d[1].avg) - 20)
                     .text((d) => d[0])
-                    .style('font-size', '16px')
+                    .style('font-size', '18px')
                     .style('fill', '#f0f0f0')
                     .style('visibility', 'hidden'); // Initially hide the text
 
@@ -91,7 +91,7 @@ export default {
                     textBackgrounds.filter((bg) => bg[0] === d[0]).style('visibility', 'visible');
                 }).on('mouseout', function (event, d) {
                     d3.select(this)
-                        .attr('r', 7) // Revert circle radius on mouseout
+                        .attr('r', 8) // Revert circle radius on mouseout
                         .style('fill', colorScale(d[0])); // Revert color
                     textLabels.filter((label) => label[0] === d[0]).style('visibility', 'hidden');
                     textBackgrounds.filter((bg) => bg[0] === d[0]).style('visibility', 'hidden');

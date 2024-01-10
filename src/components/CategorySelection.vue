@@ -67,7 +67,7 @@ export default {
   display: flex;
   overflow-x: auto;
   white-space: nowrap;
-  gap: 0.5rem;
+  gap: 1.4rem;
   padding: 0.5rem;
   background: rgba(0, 0, 0, 0.0);
   position: relative;

@@ -35,42 +35,45 @@ export default {
       this.$emit('category-selected', category);
     },
   },
+
   watch: {
   },
+
   computed: {
     isCatSelected() {
       return (category) => this.selected === category;
-    },
-    scrollHorizontally(event) {
+    }
+  },
+
+  scrollHorizontally(event) {
       console.log(event)
     }
-  }
 }
 </script>
 
 <style>
 .categoryContainer {
   position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
+  top: -7vh;
+  left: 0vw;
+  width: 50em;
+  height: 50px;;
   z-index: 999;
   text-align: center;
-  overflow:auto;
+  overflow: auto;
 }
+
 .categorySelection {
   display: flex;
   overflow-x: auto;
   white-space: nowrap;
   gap: 0.5rem;
   padding: 0.5rem;
-  /* background: rgba(0, 0, 0, 0.25); */
+  background: rgba(0, 0, 0, 0.0);
   position: relative;
-
   scroll-behavior: smooth;
-
-  /* blur the end of the element */
 }
+
 .navArrow {
   position: absolute;
   top: 50%;
